@@ -28,14 +28,16 @@ var Backg = function(){
 }
 
 var Ship = function(x,y, speed, angle){
+    this.side = 70;
+
   	this.x = window.innerWidth/2;
   	this.y = window.innerHeight/2;
 
-    this.xRight = this.x + 35;
-    this.yRight = this.y + 70;
+    this.xRight = this.x + this.side/2;
+    this.yRight = this.y + this.side;
 
-    this.xLeft = this.x - 35;
-    this.yLeft = this.y + 70;
+    this.xLeft = this.x - this.side/2;
+    this.yLeft = this.y + this.side;
 
 
     this.speedX = 0;
@@ -51,20 +53,35 @@ var Ship = function(x,y, speed, angle){
         this.yLeft = this.yLeft + this.speedY;
     }
 
-	this.draw = function(ctx){
-        ctx.strokeStyle="#FFFFFF";
-		ctx.beginPath();
-		ctx.moveTo(this.x,this.y);
-		ctx.lineTo(this.xRight,this.yRight);
-		ctx.lineTo(this.xLeft,this.yLeft);
-		ctx.lineTo(this.x,this.y);
-		ctx.closePath();
-/*
-		ctx.strokeStyle="#FFFFFF";
-		ctx.lineWidth = '3';
-*/
-		ctx.stroke();
-	}
+  	this.draw = function(ctx){
+      ctx.strokeStyle="#FFFFFF";
+  		ctx.beginPath();
+  		ctx.moveTo(this.x,this.y);
+  		ctx.lineTo(this.xRight,this.yRight);
+  		ctx.lineTo(this.xLeft,this.yLeft);
+  		ctx.lineTo(this.x,this.y);
+  		ctx.closePath();
+  /*
+  		ctx.strokeStyle="#FFFFFF";
+  		ctx.lineWidth = '3';
+  */
+  		ctx.stroke();
+  	}
+
+    this.collided = funtion(ctx){
+      ctx.strokeStyle="red";
+  		ctx.beginPath();
+  		ctx.moveTo(this.x,this.y);
+  		ctx.lineTo(this.xRight,this.yRight);
+  		ctx.lineTo(this.xLeft,this.yLeft);
+  		ctx.lineTo(this.x,this.y);
+  		ctx.closePath();
+  /*
+  		ctx.strokeStyle="#FFFFFF";
+  		ctx.lineWidth = '3';
+  */
+  		ctx.stroke();
+    }
 }
 
 var Bullet = function(x,y, speedX, speedY){
@@ -123,16 +140,47 @@ function resizeCanvas(canvas) {
 }
 
 function detectAsteroidToShipCollition(ship, asteroid){
-    dx =  abs(asteroid.x - )
-}
+    dx1 = abs(asteroid.x - ship.x);
+    dy1 = abs(asteroid.y - ship.y);
+
+    dx2 = abs(asteroid.x - ship.xRight);
+    dy2 = abs(asteroid.y - ship.yRight);
+
+    dx3 = abs(asteroid.x - ship.xLeft);
+    dy3 = abs(asteroid.y - ship.yLeft);
+
+    distance1 = Math.sqrt( Math.pow(dx1,2) +  Math.pow(dy1,2));
+    distance2 = Math.sqrt( Math.pow(dx2,2) +  Math.pow(dy2,2));
+    distance3 = Math.sqrt( Math.pow(dx3,2) +  Math.pow(dy3,2));
+
+    minDist1 = distance1;
+    minDist2 = distance2;
+
+    if(minDist1 > distance3){
+      minDist1 = distance3;
+    }else if(minDist2 > distance3){
+      minDist2 = distance3;
+    }
+
+    distanceCollition = Math.sqrt(Math.pow(ship.side/2, 2) + Math.pow(asteroid.radius, 2));
+
+    if(minDist1+minDist2 < distanceCollition){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
 function refresh(ship, asteroid, contexto, backg){
     backg.draw(contexto);
+    ship.draw(contexto);
     for(i=0; i<asteroid.length; i++){
         asteroid[i].move();
         asteroid[i].draw(contexto);
+        if(detectAsteroidToShipCollition(ship, asteroid[i])){
+          ship.collided(contexto);
+        }
     }
-    ship.draw(contexto);
 }
 
 function spawnAsteroids(asteroids,number, level){ //level aumentará la speed
