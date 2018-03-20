@@ -27,7 +27,7 @@ var Backg = function(){
 
 }
 
-var Ship = function(x,y, speed, angle){
+var Ship = function(){
     this.side = 70;
 
   	this.x = window.innerWidth/2;
@@ -53,8 +53,12 @@ var Ship = function(x,y, speed, angle){
         this.yLeft = this.yLeft + this.speedY;
     }
 
-  	this.draw = function(ctx){
-      ctx.strokeStyle="#FFFFFF";
+  	this.draw = function(ctx, collition){
+      if(collition){
+        ctx.strokeStyle="red";
+      }else{
+        ctx.strokeStyle="#FFFFFF";
+      }
   		ctx.beginPath();
   		ctx.moveTo(this.x,this.y);
   		ctx.lineTo(this.xRight,this.yRight);
@@ -67,21 +71,6 @@ var Ship = function(x,y, speed, angle){
   */
   		ctx.stroke();
   	}
-
-    this.collided = funtion(ctx){
-      ctx.strokeStyle="red";
-  		ctx.beginPath();
-  		ctx.moveTo(this.x,this.y);
-  		ctx.lineTo(this.xRight,this.yRight);
-  		ctx.lineTo(this.xLeft,this.yLeft);
-  		ctx.lineTo(this.x,this.y);
-  		ctx.closePath();
-  /*
-  		ctx.strokeStyle="#FFFFFF";
-  		ctx.lineWidth = '3';
-  */
-  		ctx.stroke();
-    }
 }
 
 var Bullet = function(x,y, speedX, speedY){
@@ -140,14 +129,14 @@ function resizeCanvas(canvas) {
 }
 
 function detectAsteroidToShipCollition(ship, asteroid){
-    dx1 = abs(asteroid.x - ship.x);
-    dy1 = abs(asteroid.y - ship.y);
+    dx1 = Math.abs(asteroid.x - ship.x);
+    dy1 = Math.abs(asteroid.y - ship.y);
 
-    dx2 = abs(asteroid.x - ship.xRight);
-    dy2 = abs(asteroid.y - ship.yRight);
+    dx2 = Math.abs(asteroid.x - ship.xRight);
+    dy2 = Math.abs(asteroid.y - ship.yRight);
 
-    dx3 = abs(asteroid.x - ship.xLeft);
-    dy3 = abs(asteroid.y - ship.yLeft);
+    dx3 = Math.abs(asteroid.x - ship.xLeft);
+    dy3 = Math.abs(asteroid.y - ship.yLeft);
 
     distance1 = Math.sqrt( Math.pow(dx1,2) +  Math.pow(dy1,2));
     distance2 = Math.sqrt( Math.pow(dx2,2) +  Math.pow(dy2,2));
@@ -163,8 +152,7 @@ function detectAsteroidToShipCollition(ship, asteroid){
     }
 
     distanceCollition = Math.sqrt(Math.pow(ship.side/2, 2) + Math.pow(asteroid.radius, 2));
-
-    if(minDist1+minDist2 < distanceCollition){
+    if(Math.sqrt(Math.pow(minDist1, 2) + Math.pow(minDist1, 2)) < distanceCollition){
       return true;
     }else{
       return false;
@@ -173,12 +161,12 @@ function detectAsteroidToShipCollition(ship, asteroid){
 
 function refresh(ship, asteroid, contexto, backg){
     backg.draw(contexto);
-    ship.draw(contexto);
+    ship.draw(contexto, false);
     for(i=0; i<asteroid.length; i++){
         asteroid[i].move();
         asteroid[i].draw(contexto);
         if(detectAsteroidToShipCollition(ship, asteroid[i])){
-          ship.collided(contexto);
+          ship.draw(contexto, true);
         }
     }
 }
