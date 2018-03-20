@@ -1,0 +1,41 @@
+html, body{
+    font-family: "Lucida Console", Monaco, monospace;
+    color: white;
+	padding: 0;
+    margin: 0px;
+    border: 0;
+    /*overflow: hidden; /*  Disable scrollbars */
+    display: block;   /* No floating content on sides */
+}
+
+
+#titulo{
+    z-index: 15;
+    position: sticky;
+    bottom: auto;
+    left: auto;
+	text-align: center;
+    display: block;
+    /*width: 100%;*/
+
+}
+a{
+	text-decoration: none;
+	color: white;
+}
+
+
+a:hover{
+	background-color: #3E3E50;
+}
+
+footer{
+    z-index: 1;
+    position: fixed;
+    bottom: 3%;
+    left: 0;
+	text-align: center;
+    display: block;
+    width: 100%;
+    font-size: 20px;
+}

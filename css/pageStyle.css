@@ -1,0 +1,50 @@
+html, body{
+    background-color: #0E0E18;
+    //font-family: "Lucida Console", Monaco, monospace;
+    color: white;
+	//padding: 0;
+    //margin: 0px;
+    //border: 0;
+    //overflow: hidden; /*  Disable scrollbars */
+    //display: block;   /* No floating content on sides */
+}
+
+
+h1{
+    font-size: 80px;
+    text-align: center;
+
+}
+
+canvas#fondo{
+	/*width: 90%;
+	/*height: 50%; */
+	padding: 0;
+    margin: 0px;
+    border: 0;
+    z-index: 2;
+}
+
+ 
+a{
+	text-decoration: none;
+	color: white;
+}
+
+
+a:hover{
+	background-color: #3E3E50;
+}
+
+footer{
+    z-index: 1;
+    position: fixed;
+    bottom: 3%;
+    left: 0;
+	text-align: center;
+    display: block;
+    width: 100%;
+    font-size: 20px;
+}
+
+	
