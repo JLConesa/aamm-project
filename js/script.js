@@ -39,11 +39,14 @@ var Ship = function(){
     this.xLeft = this.x - this.side/2;
     this.yLeft = this.y + this.side;
 
-    /*this.angle = ;*/
-    this.speedX = 0;
-    this.speedY = 0;
+    this.centerX = (this.xRight-this.xLeft)/2;
+    this.centerY = this.y+this.side/2;
+
 
     this.direction = 0;//Math.PI / 2; /*esta variable indicará hacia donde apunta la nave*/
+    this.speedX = 0;
+    this.speedY = -10;
+    this.speed = 15; //Velocidad general de la nave
 
     this.move = function(){  /*acelera en la direction de la nave*/
         this.x = this.x + this.speedX;
@@ -53,19 +56,26 @@ var Ship = function(){
         this.y = this.y + this.speedY;
         this.yRight = this.yRight + this.speedY;
         this.yLeft = this.yLeft + this.speedY;
+        console.log("Acelerando...");
+    }
+
+    this.inertia = function(){ /*Debería activarse al dejar de acelerar*/
+      this.speedX = 0;
+      this.speedY = 0;
     }
     this.rotate = function(sense,ctx){
+        var sensibility = Math.PI/8;
         if(sense === "left"){
 
-            this.direction = this.direction + Math.PI/8;
-
+            this.direction = this.direction + sensibility;
             /*this.x = ship.side*cos(this.direction);
             this.y = ship.side*sin(this.direction);*/
-            /*this.xRight =*/
         }
         if(sense === "right"){
-            this.direction = this.direction - Math.PI/8;
+            this.direction = this.direction - sensibility;
         }
+        this.speedX = -this.speed*Math.sin(this.direction);
+        this.speedY = -this.speed*Math.cos(this.direction);
     }
 
   	this.draw = function(ctx, collition){
@@ -76,13 +86,11 @@ var Ship = function(){
       }
       ctx.lineWidth="1";
       ctx.save();
-      ctx.translate(this.x, this.y);
+      ctx.translate(this.x,this.y);
       ctx.rotate(-this.direction);
 
-
-
-  		ctx.beginPath();
   		//ctx.moveTo(this.x,this.y);
+      ctx.beginPath();
   		//ctx.lineTo(this.xRight,this.yRight);
       ctx.lineTo(-this.side/2, this.side);
   		//ctx.lineTo(this.xLeft,this.yLeft);
@@ -91,23 +99,56 @@ var Ship = function(){
       ctx.lineTo(0,0);
   		ctx.closePath();
   		ctx.stroke();
-
+      //ctx.translate(this.x, this.y);
       ctx.restore();
   	}
 
     this.shoot = function(bullet){
-      bullet.push(new Bullet(this.x, this.y, 10, this.direction, 10));
+      bullet.push(new Bullet(this.x, this.y, 4, this.direction, 3));
       console.log("pium");
-      console.log("x: "+bullet[0].x);
+      /*console.log("x: "+bullet[0].x);
       console.log("y: "+bullet[0].y);
       console.log("bottomX: "+bullet[0].bottomX);
       console.log("bottomY: "+bullet[0].bottomY);
-      console.log("angle: "+ bullet[0].angle );
+      console.log("angle: "+ bullet[0].angle );*/
     }
+
+    this.death = function(){
+      /*Desaparece la nave, quita una vida o pierdes el juego*/
+    }
+    this.hasCollided = function(asteroid){
+        dx1 = Math.abs(asteroid.x - this.x);
+        dy1 = Math.abs(asteroid.y - this.y);
+
+        dx2 = Math.abs(asteroid.x - this.xRight);
+        dy2 = Math.abs(asteroid.y - this.yRight);
+
+        dx3 = Math.abs(asteroid.x - this.xLeft);
+        dy3 = Math.abs(asteroid.y - this.yLeft);
+
+        distance1 = Math.sqrt( Math.pow(dx1,2) +  Math.pow(dy1,2));
+        distance2 = Math.sqrt( Math.pow(dx2,2) +  Math.pow(dy2,2));
+        distance3 = Math.sqrt( Math.pow(dx3,2) +  Math.pow(dy3,2));
+
+        minDist1 = distance1;
+        minDist2 = distance2;
+
+        if(minDist1 > distance3){
+          minDist1 = distance3;
+        }else if(minDist2 > distance3){
+          minDist2 = distance3;
+        }
+
+        distanceCollition = Math.sqrt(Math.pow(this.side/2, 2) + Math.pow(asteroid.radius, 2));
+        if(Math.sqrt(Math.pow(minDist1, 2) + Math.pow(minDist1, 2)) < distanceCollition){
+          return true;
+        }else{
+          return false;
+        }
+      }
 }
 
 var Bullet = function(x,y, speed, angle, longitude){
-/*idea: updatear speeds en función de la rotation de la nave*/
     this.x = x;
     this.y = y;
     this.angle = angle;
@@ -164,12 +205,26 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     }
 
     this.draw = function(ctx) {
-        ctx.strokeStyle="red";
+        ctx.strokeStyle="#FFFFFF";
 		ctx.lineWidth = '2';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
         ctx.closePath();
 		ctx.stroke();
+    }
+
+    this.destroy = function(ctx){
+      /*Aquí el aseroide se dividirá en 2 pequeños o si es pequeño (radio<algo)
+      saldrá una secuencia de destrozar*/
+      this.radius = 0;
+    }
+
+    this.hasCollided = function(bullet){
+        if(Math.abs(bullet.x-this.x)<this.radius){
+          return true;
+        }else{
+          return false;
+        }
     }
 }
 
@@ -190,44 +245,9 @@ function removeOutOfBoundBullet(bullets){
 }
 
 
-function detectBulletToAsteroidCollition(bullet, asteroid){
-    if(Math.abs(bullet.x-asteroid.x)<asteroid.radius){
-      return true;
-    }else{
-      return false;
-    }
-}
 
-function detectAsteroidToShipCollition(ship, asteroid){
-    dx1 = Math.abs(asteroid.x - ship.x);
-    dy1 = Math.abs(asteroid.y - ship.y);
 
-    dx2 = Math.abs(asteroid.x - ship.xRight);
-    dy2 = Math.abs(asteroid.y - ship.yRight);
 
-    dx3 = Math.abs(asteroid.x - ship.xLeft);
-    dy3 = Math.abs(asteroid.y - ship.yLeft);
-
-    distance1 = Math.sqrt( Math.pow(dx1,2) +  Math.pow(dy1,2));
-    distance2 = Math.sqrt( Math.pow(dx2,2) +  Math.pow(dy2,2));
-    distance3 = Math.sqrt( Math.pow(dx3,2) +  Math.pow(dy3,2));
-
-    minDist1 = distance1;
-    minDist2 = distance2;
-
-    if(minDist1 > distance3){
-      minDist1 = distance3;
-    }else if(minDist2 > distance3){
-      minDist2 = distance3;
-    }
-
-    distanceCollition = Math.sqrt(Math.pow(ship.side/2, 2) + Math.pow(asteroid.radius, 2));
-    if(Math.sqrt(Math.pow(minDist1, 2) + Math.pow(minDist1, 2)) < distanceCollition){
-      return true;
-    }else{
-      return false;
-    }
-  }
 
 function refresh(ship, asteroid, bullets, contexto, backg){
     backg.draw(contexto);
@@ -235,14 +255,20 @@ function refresh(ship, asteroid, bullets, contexto, backg){
     for(i=0; i<asteroid.length; i++){
         asteroid[i].move();
         asteroid[i].draw(contexto);
-        if(detectAsteroidToShipCollition(ship, asteroid[i])){
-          ship.draw(contexto, true);
+        if(ship.hasCollided(asteroid[i])){
+          ship.draw(contexto, true); //Debug lo pone en rojo
+          ship.death();
         }
-    }for(i=0; i<bullets.length; i++){
-        bullets[i].move();
-        bullets[i].draw(contexto);
-    }
 
+          for(j=0; j<bullets.length; j++){
+            bullets[j].move();
+            bullets[j].draw(contexto);
+            if(asteroid[i].hasCollided(bullets[j])){
+              asteroid[i].destroy();
+              //bullets[j] = undefined;
+            }
+          }
+    }
 }
 
 function spawnAsteroids(asteroids,number, level){ //level aumentará la speed
@@ -256,7 +282,7 @@ function key (e,ship, bullets,contexto){
 		tecla  = e.which;
 		switch (tecla){
 			case 38: /*up*/
-			//ship.move();
+			   ship.move();
 			break;
 			case 37: /*left*/
 			   ship.rotate("left",contexto);
@@ -274,7 +300,7 @@ window.onload = function(){
 	var elemCanvas = document.getElementById('fondo');
 	if (elemCanvas && elemCanvas.getContext){
 		var contexto = elemCanvas.getContext('2d');
-		var ship = new Ship
+		var ship = new Ship();
     var backg = new Backg();
     resizeCanvas(elemCanvas);
     var asteroids = [];
