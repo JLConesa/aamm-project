@@ -7,7 +7,7 @@ Pablo Lago Álvarez
 Kenza Marrakchi Chikri
 */
 
-/* Al final creo que usaremos las CSS stars
+/* Al final creo que usaremos las CSS stars. Esto pintaba un fondo
 var Stars = function(){
     this.draw = function(ctx){
         var stars = new Image();
@@ -30,8 +30,8 @@ var Backg = function(){
 var Ship = function(){
     this.side = 70;
 
-  	this.x = window.innerWidth/2;
-  	this.y = window.innerHeight/2;
+  	this.x = window.innerWidth/2;  /*Se inicializa en el centro*/
+  	this.y = window.innerHeight/2; /*Se inicializa en el centro*/
 
     this.xRight = this.x + this.side/2;
     this.yRight = this.y + this.side;
@@ -43,7 +43,9 @@ var Ship = function(){
     this.speedX = 0;
     this.speedY = 0;
 
-    this.move = function(){ /*Yo haría que tuviera speed y rotation idk*/
+    this.direction = 0; /*esta variable indicará hacia donde apunta la nave*/
+
+    this.move = function(){  /*acelera en la direction de la nave*/
         this.x = this.x + this.speedX;
         this.xRight = this.xRight + this.speedX;
         this.xLeft = this.xLeft + this.speedX;
@@ -65,24 +67,42 @@ var Ship = function(){
   		ctx.lineTo(this.xLeft,this.yLeft);
   		ctx.lineTo(this.x,this.y);
   		ctx.closePath();
-  /*
-  		ctx.strokeStyle="#FFFFFF";
-  		ctx.lineWidth = '3';
-  */
   		ctx.stroke();
   	}
+
+    this.shoot = function(bullet){
+      bullet[bullet.length] = new Bullet(this.x, this.y, 10, this.direction, 10);
+    }
 }
 
-var Bullet = function(x,y, speedX, speedY){
+var Bullet = function(x,y, speed, angle, longitude){
 /*idea: updatear speeds en función de la rotation de la nave*/
     this.x = x;
     this.y = y;
-    this.draw = function(ctx){
-        ctx.stroleStyle="red";
-        ctx.lineWidth = '2';
+    this.angle = angle;
+    this.speedX = Math.cos(angle) * speed;
+    this.speedY = Math.sin(angle) * speed;
+    this.longitude = longitude;
+    this.bottomX = this.x + Math.cos(angle)*this.longitude;
+    this.bottomY = this.y + Math.cos(angle)*this.longitude;
 
+    this.draw = function(ctx){
+        ctx.stroleStyle="#FFFFFF";
+        ctx.lineWidth = '1';
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.bottomX, this.bottomY);
+        ctx.closePath();
+        ctx.stroke();
     }
 
+    this.move = function(){
+      this.x = this.x + speedX;
+      this.y = this.y + speedY;
+
+      this.bottomX = this.bottomX + speedX;
+      this.bottomY = this.bottomY + speedY;
+    }
 }
 
 var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
@@ -159,7 +179,7 @@ function detectAsteroidToShipCollition(ship, asteroid){
     }
   }
 
-function refresh(ship, asteroid, contexto, backg){
+function refresh(ship, asteroid, bullet, contexto, backg){
     backg.draw(contexto);
     ship.draw(contexto, false);
     for(i=0; i<asteroid.length; i++){
@@ -178,26 +198,35 @@ function spawnAsteroids(asteroids,number, level){ //level aumentará la speed
     }
 }
 
+function k (e,ship){
+		tecla  = e.which;
+		switch (tecla){
+			case 38:
+			//ship.move();
+			break;
+			case 37:
+			ship.rotate(left);
+			break;
+			case 39:
+			ship.rotate(right);
+			break;
+		}
+}
+
 window.onload = function(){
 	var elemCanvas = document.getElementById('fondo');
 	if (elemCanvas && elemCanvas.getContext){
 		var contexto = elemCanvas.getContext('2d');
-		var ship = new Ship();
-
-        /*var asteroid = new Asteroid(500, 100, 55, 2, 2, 0);*/
-        var backg = new Backg();
-        resizeCanvas(elemCanvas);
-
-        /*asteroid.draw(contexto);
-        ship.draw(contexto);*/
-
-        var asteroids = [];
-        spawnAsteroids(asteroids,5,2);
-
-
-        setInterval(function(){refresh(ship, asteroids, contexto,backg)}, 16);
-
-
+		var ship = new Ship
+    var backg = new Backg();
+    resizeCanvas(elemCanvas);
+    var asteroids = [];
+    spawnAsteroids(asteroids,5,2);
+    var bullets = [];
+    document.onkeydown = function(e) {
+		    k(e, ship);
+	  }
+    setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 16);
 	}
     else{
 		alert('Navegador Incompatible');
