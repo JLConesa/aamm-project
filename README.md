@@ -24,7 +24,4 @@ Ver commits.
 * Parallax Star background in CSS: https://codepen.io/saransh/pen/BKJun
 * Material Design: https://material.io/
 * Material Design: https://getmdl.io/started/index.html
-
-
-
-Probando commit clase Pablo
+* Detectar varias teclas: https://gist.github.com/bradenbest/7251ca42af2991f234346baeabbf435b
