@@ -17,6 +17,8 @@ var Stars = function(){
 
 }
 */
+var asteroids = [];
+var bullets = [];
 
 var Backg = function(){
     this.draw = function(ctx){
@@ -29,6 +31,8 @@ var Backg = function(){
 
 var Ship = function(){
     this.side = 70;
+    this.lives = 3; /*Vidas*/
+    this.inmune = true;
 
   	this.x = window.innerWidth/2;  /*Se inicializa en el centro*/
   	this.y = window.innerHeight/2; /*Se inicializa en el centro*/
@@ -47,6 +51,30 @@ var Ship = function(){
     this.speedX = 0;
     this.speedY = -10;
     this.speed = 15; //Velocidad general de la nave
+
+    this.init = function(){
+      this.side = 70;
+      this.lives = 3; /*Vidas*/
+      this.inmune = true;
+
+      this.x = window.innerWidth/2;  /*Se inicializa en el centro*/
+      this.y = window.innerHeight/2; /*Se inicializa en el centro*/
+
+      this.xRight = this.x + this.side/2;
+      this.yRight = this.y + this.side;
+
+      this.xLeft = this.x - this.side/2;
+      this.yLeft = this.y + this.side;
+
+      this.centerX = (this.xRight-this.xLeft)/2;
+      this.centerY = this.y+this.side/2;
+
+
+      this.direction = 0;//Math.PI / 2; /*esta variable indicará hacia donde apunta la nave*/
+      this.speedX = 0;
+      this.speedY = -10;
+      this.speed = 15; //Velocidad general de la nave
+    }
 
     this.move = function(){  /*acelera en la direction de la nave*/
         this.x = this.x + this.speedX;
@@ -81,6 +109,9 @@ var Ship = function(){
   	this.draw = function(ctx, collition){
       if(collition){
         ctx.strokeStyle="red";
+      }else if(this.inmune){
+        ctx.strokeStyle="blue";
+
       }else{
         ctx.strokeStyle="#FFFFFF";
       }
@@ -115,6 +146,18 @@ var Ship = function(){
 
     this.death = function(){
       /*Desaparece la nave, quita una vida o pierdes el juego*/
+      if(this.inmune === false){
+      this.x = 8000;
+      this.side = 0; //meter animación destrozar lol
+      this.lives = this.lives-1;
+      this.inmune = true;
+      //setTimeout(0,3000);
+      if(this.lives<=0){
+        this.side=0;
+        gameOver();
+      }
+      }
+      this.init();
     }
     this.hasCollided = function(asteroid){
         dx1 = Math.abs(asteroid.x - this.x);
@@ -220,7 +263,7 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     }
 
     this.hasCollided = function(bullet){
-        if(Math.abs(bullet.x-this.x)<this.radius){
+        if(Math.abs(bullet.x-this.x)<this.radius && Math.abs(bullet.y-this.y)<this.radius){
           return true;
         }else{
           return false;
@@ -244,6 +287,13 @@ function removeOutOfBoundBullet(bullets){
   }
 }
 
+function gameOver(){
+  var canvas = document.getElementById("fondo");
+  var ctx = canvas.getContext("2d");
+  ctx.fillStyle =("#FFFFFF");
+  ctx.font = "30px Arial";
+  ctx.fillText("GAME OVER",10,50);
+}
 
 
 
@@ -252,12 +302,18 @@ function removeOutOfBoundBullet(bullets){
 function refresh(ship, asteroid, bullets, contexto, backg){
     backg.draw(contexto);
     ship.draw(contexto, false);
+    if (ship.lives<=0){gameOver();}
+    /*if(ship.inmune){
+      setTimeout(function(){ship.inmune = false;},4000);
+    }*/
+    //setTimeout(function(){if(ship.inmune){ship.inmune = false;}},3000);
+
     for(i=0; i<asteroid.length; i++){
         asteroid[i].move();
         asteroid[i].draw(contexto);
         if(ship.hasCollided(asteroid[i])){
-          ship.draw(contexto, true); //Debug lo pone en rojo
-          ship.death();
+          ship.draw(contexto, true); //(Debug) lo pone en rojo
+          //ship.death();
         }
 
           for(j=0; j<bullets.length; j++){
@@ -265,10 +321,12 @@ function refresh(ship, asteroid, bullets, contexto, backg){
             bullets[j].draw(contexto);
             if(asteroid[i].hasCollided(bullets[j])){
               asteroid[i].destroy();
-              //bullets[j] = undefined;
+              bullets.splice(j,1); /*Elimina la bullet del array*/
             }
           }
     }
+    console.log(ship.lives);
+    console.log("inmune? "+ship.inmune)
 }
 
 function spawnAsteroids(asteroids,number, level){ //level aumentará la speed
@@ -303,13 +361,14 @@ window.onload = function(){
 		var ship = new Ship();
     var backg = new Backg();
     resizeCanvas(elemCanvas);
-    var asteroids = [];
     spawnAsteroids(asteroids,5,2);
-    var bullets = [];
-    document.onkeydown = function(e) {
+    //var asteroids = [];
+    //var bullets = [];
+  document.onkeydown = function(e) {
 		    key(e, ship, bullets, contexto);
 	  }
     setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 16);
+    //setTimeout(function(){if(ship.inmune){ship.inmune = false;}},3000);
 	}
     else{
 		alert('Navegador Incompatible');

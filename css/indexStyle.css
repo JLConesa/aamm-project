@@ -9,16 +9,37 @@ html, body{
 }
 
 
-#titulo{
+.titulo{
     z-index: 15;
     position: sticky;
-    bottom: auto;
-    left: auto;
-	text-align: center;
+    top: 30%;
+    /* left: auto; */
+	  /* text-align: center; */
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
     display: block;
-    /*width: 100%;*/
+    margin: auto;
+    /* border: solid green 2px; /*debug stuff*/ */
 
 }
+
+.ab_center
+{
+    height:100%;
+    width:100%;
+    position: absolute;
+    margin:auto;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    max-width: 80%;
+    max-height: 50%;
+    /* border: solid red 2px; /*debug stuff*/ */
+}
+
 a{
 	text-decoration: none;
 	color: white;
@@ -34,7 +55,7 @@ footer{
     position: fixed;
     bottom: 3%;
     left: 0;
-	text-align: center;
+	  text-align: center;
     display: block;
     width: 100%;
     font-size: 20px;
