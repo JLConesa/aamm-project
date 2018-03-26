@@ -51,7 +51,6 @@ var Ship = function(){
     this.speedX = 0;
     this.speedY = -10;
     this.speed = 15; //Velocidad general de la nave
-<<<<<<< HEAD
 
     this.init = function(){
       this.side = 70;
@@ -76,8 +75,6 @@ var Ship = function(){
       this.speedY = -10;
       this.speed = 15; //Velocidad general de la nave
     }
-=======
->>>>>>> c130c766fae2b53622c1fc647aa747db0dfe313a
 
     this.move = function(){  /*acelera en la direction de la nave*/
         this.x = this.x + this.speedX;
@@ -149,33 +146,18 @@ var Ship = function(){
 
     this.death = function(){
       /*Desaparece la nave, quita una vida o pierdes el juego*/
-<<<<<<< HEAD
       if(this.inmune === false){
       this.x = 8000;
       this.side = 0; //meter animación destrozar lol
       this.lives = this.lives-1;
       this.inmune = true;
       //setTimeout(0,3000);
-=======
-      if(this.inmune == false){
-      this.side = 0; //meter animación destrozar lol
-      this.x = 8000;
-      this.lives = this.lives-1;
-      this.inmune = true;
->>>>>>> c130c766fae2b53622c1fc647aa747db0dfe313a
       if(this.lives<=0){
         this.side=0;
         gameOver();
       }
       }
-<<<<<<< HEAD
       this.init();
-=======
-      this.x = window.innerWidth/2;
-      this.y = window.innerHeight/2;
-      this.direction = 0;
-      this.side = 70;
->>>>>>> c130c766fae2b53622c1fc647aa747db0dfe313a
     }
     this.hasCollided = function(asteroid){
         dx1 = Math.abs(asteroid.x - this.x);
@@ -321,25 +303,17 @@ function refresh(ship, asteroid, bullets, contexto, backg){
     backg.draw(contexto);
     ship.draw(contexto, false);
     if (ship.lives<=0){gameOver();}
-<<<<<<< HEAD
     /*if(ship.inmune){
       setTimeout(function(){ship.inmune = false;},4000);
     }*/
     //setTimeout(function(){if(ship.inmune){ship.inmune = false;}},3000);
 
-=======
->>>>>>> c130c766fae2b53622c1fc647aa747db0dfe313a
     for(i=0; i<asteroid.length; i++){
         asteroid[i].move();
         asteroid[i].draw(contexto);
         if(ship.hasCollided(asteroid[i])){
-<<<<<<< HEAD
           ship.draw(contexto, true); //(Debug) lo pone en rojo
           //ship.death();
-=======
-          ship.draw(contexto, true); //Debug lo pone en rojo
-          ship.death();
->>>>>>> c130c766fae2b53622c1fc647aa747db0dfe313a
         }
 
           for(j=0; j<bullets.length; j++){
@@ -352,10 +326,7 @@ function refresh(ship, asteroid, bullets, contexto, backg){
           }
     }
     console.log(ship.lives);
-<<<<<<< HEAD
     console.log("inmune? "+ship.inmune)
-=======
->>>>>>> c130c766fae2b53622c1fc647aa747db0dfe313a
 }
 
 function spawnAsteroids(asteroids,number, level){ //level aumentará la speed
@@ -393,19 +364,11 @@ window.onload = function(){
     spawnAsteroids(asteroids,5,2);
     //var asteroids = [];
     //var bullets = [];
-<<<<<<< HEAD
   document.onkeydown = function(e) {
 		    key(e, ship, bullets, contexto);
 	  }
     setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 16);
     //setTimeout(function(){if(ship.inmune){ship.inmune = false;}},3000);
-=======
-    document.onkeydown = function(e) {
-		    key(e, ship, bullets, contexto);
-	  }
-    setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 16);
-    setInterval(function(){if(ship.inmune){ship.inmune = false;}},3000);
->>>>>>> c130c766fae2b53622c1fc647aa747db0dfe313a
 	}
     else{
 		alert('Navegador Incompatible');
