@@ -19,10 +19,6 @@ var Stars = function(){
 */
 var asteroids = [];
 var bullets = [];
-var startSound = new Audio('media/intro.mp3');
-var endSound = new Audio('media/death.mp3');
-var reactor = new Audio('media/reactor.mp3');
-var pew = new Audio('media/shoot.mp3');
 
 
 var Backg = function(){
@@ -297,7 +293,12 @@ function gameOver(){
   endSound.play();
 }
 
-
+function muteGame(){
+  pew.muted = true;
+  startSound.muted = true;
+  endSound.muted = true;
+  reactor.muted = true;
+}
 
 
 
@@ -357,6 +358,11 @@ function key (e,ship, bullets,contexto){
 }
 
 window.onload = function(){
+  var startSound = document.getElementById("startSound");
+  var endSound = document.getElementById("endSound");
+  var pew = document.getElementById("pew");
+  var reactor = document.getElementById("reactor");
+
 	var elemCanvas = document.getElementById('fondo');
 	if (elemCanvas && elemCanvas.getContext){
 		var contexto = elemCanvas.getContext('2d');
