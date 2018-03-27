@@ -298,6 +298,7 @@ function muteGame(){
   startSound.muted = true;
   endSound.muted = true;
   reactor.muted = true;
+  explosion.muted = true;
 }
 
 
@@ -324,6 +325,7 @@ function refresh(ship, asteroid, bullets, contexto, backg){
             bullets[j].draw(contexto);
             if(asteroid[i].hasCollided(bullets[j])){
               asteroid[i].destroy();
+              explosion.play();
               bullets.splice(j,1); /*Elimina la bullet del array*/
             }
           }
@@ -362,6 +364,7 @@ window.onload = function(){
   var endSound = document.getElementById("endSound");
   var pew = document.getElementById("pew");
   var reactor = document.getElementById("reactor");
+  var explosion = document.getElementById("explosion");
 
 	var elemCanvas = document.getElementById('fondo');
 	if (elemCanvas && elemCanvas.getContext){
