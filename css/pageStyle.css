@@ -28,12 +28,13 @@ canvas#fondo{
 
 a{
 	text-decoration: none;
-	color: white;
+	color: inherit;
 }
 
 
 a:hover{
-	background-color: #3E3E50;
+	background-color: rgba(25, 25, 30, 1);
+  color: white;
 }
 
 footer{
@@ -46,9 +47,11 @@ footer{
     display: block;
     width: 100%;
     font-size: 20px;
-    /* color: #2f3030; */
+    color: rgba(255, 255, 255, 0.3);
+    padding-top: 20px;
+    /* border: solid red 2px; */
 }
 
-/* footer:hover{
-  color: white;
-} */
+footer:hover{
+  color: rgba(255, 255, 255, 1);
+}
