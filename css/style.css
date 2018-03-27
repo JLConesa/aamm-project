@@ -37,7 +37,9 @@ button#mute{
   position:fixed;
   bottom: 10%;
   right: 2%;
+  font-style: italic;
 }
+
 
 a{
 	text-decoration: none;

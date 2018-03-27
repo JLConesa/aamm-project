@@ -7,16 +7,7 @@ Pablo Lago Álvarez
 Kenza Marrakchi Chikri
 */
 
-/* Al final creo que usaremos las CSS stars. Esto pintaba un fondo
-var Stars = function(){
-    this.draw = function(ctx){
-        var stars = new Image();
-        stars.src = 'img/stars.png';
-        ctx.drawImage(stars,0,0);
-    }
 
-}
-*/
 var asteroids = [];
 var bullets = [];
 
@@ -48,10 +39,10 @@ var Ship = function(){
     this.centerY = this.y+this.side/2;
 
 
-    this.direction = 0;//Math.PI / 2; /*esta variable indicará hacia donde apunta la nave*/
+    this.direction = 0; /*esta variable indicará hacia donde apunta la nave*/
     this.speedX = 0;
     this.speedY = -10;
-    this.speed = 15; //Velocidad general de la nave
+    this.speed = 15; /*Velocidad general de la nave*/
 
     this.init = function(){
       this.side = 70;
@@ -71,10 +62,10 @@ var Ship = function(){
       this.centerY = this.y+this.side/2;
 
 
-      this.direction = 0;//Math.PI / 2; /*esta variable indicará hacia donde apunta la nave*/
+      this.direction = 0; /*esta variable indicará hacia donde apunta la nave*/
       this.speedX = 0;
       this.speedY = -10;
-      this.speed = 15; //Velocidad general de la nave
+      this.speed = 15; /*Velocidad general de la nave*/
     }
 
     this.move = function(){  /*acelera en la direction de la nave*/
@@ -254,7 +245,7 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     }
 
     this.destroy = function(ctx){
-      /*Aquí el aseroide se dividirá en 2 pequeños o si es pequeño (radio<algo)
+      /*Aquí el asteroide se dividirá en 2 pequeños o si es pequeño (radio<algo)
       saldrá una secuencia de destrozar*/
       this.radius = 0;
     }
@@ -294,11 +285,25 @@ function gameOver(){
 }
 
 function muteGame(){
+
+  var btn = document.getElementById("mute");
+
+  if(!pew.muted){
   pew.muted = true;
   startSound.muted = true;
   endSound.muted = true;
   reactor.muted = true;
   explosion.muted = true;
+  document.getElementById("speaker").textContent =  "volume_up";
+}
+  else{
+    pew.muted = false;
+    startSound.muted = false;
+    endSound.muted = false;
+    reactor.muted = false;
+    explosion.muted = false;
+    document.getElementById("speaker").textContent =  "volume_off";
+  }
 }
 
 
