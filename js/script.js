@@ -19,6 +19,11 @@ var Stars = function(){
 */
 var asteroids = [];
 var bullets = [];
+var startSound = new Audio('media/intro.mp3');
+var endSound = new Audio('media/death.mp3');
+var reactor = new Audio('media/reactor.mp3');
+var pew = new Audio('media/shoot.mp3');
+
 
 var Backg = function(){
     this.draw = function(ctx){
@@ -136,12 +141,8 @@ var Ship = function(){
 
     this.shoot = function(bullet){
       bullet.push(new Bullet(this.x, this.y, 4, this.direction, 3));
-      console.log("pium");
-      /*console.log("x: "+bullet[0].x);
-      console.log("y: "+bullet[0].y);
-      console.log("bottomX: "+bullet[0].bottomX);
-      console.log("bottomY: "+bullet[0].bottomY);
-      console.log("angle: "+ bullet[0].angle );*/
+      // console.log("pium");
+      pew.play();
     }
 
     this.death = function(){
@@ -293,6 +294,7 @@ function gameOver(){
   ctx.fillStyle =("#FFFFFF");
   ctx.font = "30px Arial";
   ctx.fillText("GAME OVER",10,50);
+  endSound.play();
 }
 
 
@@ -325,8 +327,8 @@ function refresh(ship, asteroid, bullets, contexto, backg){
             }
           }
     }
-    console.log(ship.lives);
-    console.log("inmune? "+ship.inmune)
+    console.log('lives: '+ship.lives);
+    // console.log("inmune? "+ship.inmune)
 }
 
 function spawnAsteroids(asteroids,number, level){ //level aumentará la speed
@@ -362,9 +364,10 @@ window.onload = function(){
     var backg = new Backg();
     resizeCanvas(elemCanvas);
     spawnAsteroids(asteroids,5,2);
+    startSound.play();
     //var asteroids = [];
     //var bullets = [];
-  document.onkeydown = function(e) {
+    document.onkeydown = function(e) {
 		    key(e, ship, bullets, contexto);
 	  }
     setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 16);
