@@ -24,7 +24,7 @@ var Backg = function(){
 var Ship = function(){
     this.side = 70;
     this.lives = 3; /*Vidas*/
-    this.inmune = true;
+    this.inmune = false;
 
   	this.x = window.innerWidth/2;  /*Se inicializa en el centro*/
   	this.y = window.innerHeight/2; /*Se inicializa en el centro*/
@@ -46,8 +46,6 @@ var Ship = function(){
 
     this.init = function(){
       this.side = 70;
-      this.lives = 3; /*Vidas*/
-      this.inmune = true;
 
       this.x = window.innerWidth/2;  /*Se inicializa en el centro*/
       this.y = window.innerHeight/2; /*Se inicializa en el centro*/
@@ -134,18 +132,20 @@ var Ship = function(){
 
     this.death = function(){
       /*Desaparece la nave, quita una vida o pierdes el juego*/
-      if(this.inmune === false){
+      if(this.inmune == false){
       this.x = 8000;
       this.side = 0; //meter animación destrozar lol
       this.lives = this.lives-1;
       this.inmune = true;
+      startSound.play();
       //setTimeout(0,3000);
+      this.init();
       if(this.lives<=0){
         this.side=0;
         gameOver();
       }
       }
-      this.init();
+
     }
     this.hasCollided = function(asteroid){
         dx1 = Math.abs(asteroid.x - this.x);
@@ -281,12 +281,13 @@ function gameOver(){
   ctx.fillStyle =("#FFFFFF");
   ctx.font = "30px Arial";
   ctx.fillText("GAME OVER",10,50);
+  /*document.write("<h1>GAME OVER</h1>");*/
   endSound.play();
 }
 
 function muteGame(){
 
-  var btn = document.getElementById("mute");
+  // var btn = document.getElementById("mute");
 
   if(!pew.muted){
   pew.muted = true;
@@ -312,8 +313,16 @@ function refresh(ship, asteroid, bullets, contexto, backg){
     backg.draw(contexto);
     ship.draw(contexto, false);
     if (ship.lives<=0){gameOver();}
+
+    if(startSound.ended){
+      ship.inmune = false;
+    }
+
     /*if(ship.inmune){
-      setTimeout(function(){ship.inmune = false;},4000);
+      startSound.play();
+      if(startSound.ended){
+        ship.inmune = false;
+      }
     }*/
     //setTimeout(function(){if(ship.inmune){ship.inmune = false;}},3000);
 
@@ -322,20 +331,25 @@ function refresh(ship, asteroid, bullets, contexto, backg){
         asteroid[i].draw(contexto);
         if(ship.hasCollided(asteroid[i])){
           ship.draw(contexto, true); //(Debug) lo pone en rojo
-          //ship.death();
+          ship.death();
         }
 
           for(j=0; j<bullets.length; j++){
             bullets[j].move();
             bullets[j].draw(contexto);
             if(asteroid[i].hasCollided(bullets[j])){
-              asteroid[i].destroy();
+              // asteroid[i].destroy();
+              asteroid.splice(i,1);
               explosion.play();
               bullets.splice(j,1); /*Elimina la bullet del array*/
             }
           }
     }
+    if(asteroid.length<=0){
+      spawnAsteroids(asteroid,5,2);
+    }
     console.log('lives: '+ship.lives);
+    console.log(asteroid.length);
     // console.log("inmune? "+ship.inmune)
 }
 
@@ -378,7 +392,8 @@ window.onload = function(){
     var backg = new Backg();
     resizeCanvas(elemCanvas);
     spawnAsteroids(asteroids,5,2);
-    startSound.play();
+    ship.death();
+    // startSound.play();
     //var asteroids = [];
     //var bullets = [];
     document.onkeydown = function(e) {
