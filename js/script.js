@@ -63,24 +63,32 @@ var Ship = function(){
       this.direction = 0; /*esta variable indicará hacia donde apunta la nave*/
       this.speedX = 0;
       this.speedY = -10;
-      this.speed = 15; /*Velocidad general de la nave*/
+      this.speed = 15; /* Velocidad general de la nave*/
     }
 
     this.move = function(){  /*acelera en la direction de la nave*/
-        this.x = this.x + this.speedX;
-        this.xRight = this.xRight + this.speedX;
-        this.xLeft = this.xLeft + this.speedX;
-
-        this.y = this.y + this.speedY;
-        this.yRight = this.yRight + this.speedY;
-        this.yLeft = this.yLeft + this.speedY;
-        console.log("Acelerando...");
+		 if(this.x>window.innerWidth+this.side/2){ 
+            this.x = -this.side/2;
+        }
+        if(this.x<-this.side/2){
+            this.x = window.innerWidth+this.side/2;
+        }else{
+            this.x = this.x + this.speedX;
+			this.xRight = this.xRight + this.speedX;
+			this.xLeft = this.xLeft + this.speedX;
+        }
+        if(this.y>window.innerHeight+this.side/2){
+            this.y = -this.side/2;
+        }
+        if(this.y<-this.side/2){
+            this.y = window.innerHeight+this.side/2;
+        }else{
+            this.y = this.y + this.speedY;
+			this.yRight = this.yRight + this.speedY;
+			this.yLeft = this.yLeft + this.speedY;
+        }
     }
-
-    this.inertia = function(){ /*Debería activarse al dejar de acelerar*/
-      this.speedX = 0;
-      this.speedY = 0;
-    }
+	
     this.rotate = function(sense,ctx){
         var sensibility = Math.PI/8;
         if(sense === "left"){
@@ -240,15 +248,18 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
 		ctx.lineWidth = '2';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+		ctx.fillStyle="#FFFFFF";
+		ctx.fill();
         ctx.closePath();
 		ctx.stroke();
     }
 
-    this.destroy = function(ctx){
+    /* this.destroy = function(ctx){
       /*Aquí el asteroide se dividirá en 2 pequeños o si es pequeño (radio<algo)
       saldrá una secuencia de destrozar*/
-      this.radius = 0;
-    }
+	  
+      /* this.radius = this.radius/2;
+    } */
 
     this.hasCollided = function(bullet){
         if(Math.abs(bullet.x-this.x)<this.radius && Math.abs(bullet.y-this.y)<this.radius){
@@ -275,12 +286,12 @@ function removeOutOfBoundBullet(bullets){
   }
 }
 
-function gameOver(){
-  var canvas = document.getElementById("fondo");
-  var ctx = canvas.getContext("2d");
+function gameOver(ctx){
+  /* var canvas = document.getElementById("fondo");
+  var ctx = canvas.getContext("2d");  */ 
   ctx.fillStyle =("#FFFFFF");
-  ctx.font = "30px Arial";
-  ctx.fillText("GAME OVER",10,50);
+  ctx.font = "60px Arial";
+  ctx.fillText("GAME OVER",10,50);  
   /*document.write("<h1>GAME OVER</h1>");*/
   endSound.play();
 }
@@ -310,9 +321,12 @@ function muteGame(){
 
 
 function refresh(ship, asteroid, bullets, contexto, backg){
-    backg.draw(contexto);
-    ship.draw(contexto, false);
-    if (ship.lives<=0){gameOver();}
+	/*Esta función nos ayuda a refrescar la pantalla del canvas, se realizará cada cierto tiempo*/
+    backg.draw(contexto); /*dibuja el fondo de la pantalla*/
+    ship.draw(contexto, false); /*dibuja la nave (triángulo)*/
+    if (ship.lives<=0){
+		gameOver(contexto);
+	}
 
     if(startSound.ended){
       ship.inmune = false;
@@ -338,10 +352,17 @@ function refresh(ship, asteroid, bullets, contexto, backg){
             bullets[j].move();
             bullets[j].draw(contexto);
             if(asteroid[i].hasCollided(bullets[j])){
-              // asteroid[i].destroy();
-              asteroid.splice(i,1);
-              explosion.play();
-              bullets.splice(j,1); /*Elimina la bullet del array*/
+              //asteroid[i].destroy();
+			  if(asteroid[i].radius > 20){
+				asteroid.splice(i,1,new Asteroid(asteroid[i].x + 55,asteroid[i].y,asteroid[i].radius/2,asteroid[i].speedX,asteroid[i].speedY,asteroid[i].rotationSpeed/2),
+			                      new Asteroid(asteroid[i].x - 55,asteroid[i].y,asteroid[i].radius/2,-asteroid[i].speedX,-asteroid[i].speedY,asteroid[i].rotationSpeed/2));
+              
+			  }
+			  else {
+				asteroid.splice(i,1);
+			  }
+			explosion.play();
+            bullets.splice(j,1); /*Elimina la bullet del array*/
             }
           }
     }
@@ -353,8 +374,10 @@ function refresh(ship, asteroid, bullets, contexto, backg){
     // console.log("inmune? "+ship.inmune)
 }
 
-function spawnAsteroids(asteroids,number, level){ //level aumentará la speed
-//https://stackoverflow.com/questions/6254050/how-to-add-an-object-to-an-array
+function spawnAsteroids(asteroids,number, level){ 
+/*level aumentará la speed*/
+/*https://stackoverflow.com/questions/6254050/how-to-add-an-object-to-an-array*/
+
     for(i=0; i<number; i++){
         asteroids.push(new Asteroid(Math.random()*window.innerWidth,Math.random()*window.innerHeight,55,Math.random()*5-Math.random()*5,Math.random()*5-Math.random()*5,Math.random()*5));
     }
@@ -372,35 +395,32 @@ function key (e,ship, bullets,contexto){
 			case 39: /*right*/
 			   ship.rotate("right");
 			break;
-      case 32: /*space*/
-        ship.shoot(bullets);
-      break;
+			case 32: /*space*/
+				ship.shoot(bullets);
+			break;
 		}
 }
 
 window.onload = function(){
-  var startSound = document.getElementById("startSound");
-  var endSound = document.getElementById("endSound");
-  var pew = document.getElementById("pew");
-  var reactor = document.getElementById("reactor");
-  var explosion = document.getElementById("explosion");
-
+	var startSound = document.getElementById("startSound");
+	var endSound = document.getElementById("endSound");
+	var pew = document.getElementById("pew");
+	var reactor = document.getElementById("reactor");
+	var explosion = document.getElementById("explosion");
 	var elemCanvas = document.getElementById('fondo');
 	if (elemCanvas && elemCanvas.getContext){
 		var contexto = elemCanvas.getContext('2d');
 		var ship = new Ship();
-    var backg = new Backg();
-    resizeCanvas(elemCanvas);
-    spawnAsteroids(asteroids,5,2);
-    ship.death();
-    // startSound.play();
-    //var asteroids = [];
-    //var bullets = [];
-    document.onkeydown = function(e) {
-		    key(e, ship, bullets, contexto);
-	  }
-    setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 16);
-    //setTimeout(function(){if(ship.inmune){ship.inmune = false;}},3000);
+		var backg = new Backg();
+		resizeCanvas(elemCanvas);
+		spawnAsteroids(asteroids,5,2);
+		ship.death();
+		/*Observamos si se ha pulsado alguna tecla del teclado*/
+		document.onkeydown = function(e) {
+				key(e, ship, bullets, contexto);
+		}
+		/*SetInterval llama a una funcion cada cierto periodo de tiempo (en milisegundos)*/
+		setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 16);
 	}
     else{
 		alert('Navegador Incompatible');
