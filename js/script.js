@@ -67,7 +67,7 @@ var Ship = function(){
     }
 
     this.move = function(){  /*acelera en la direction de la nave*/
-		 if(this.x>window.innerWidth+this.side/2){ 
+		 if(this.x>window.innerWidth+this.side/2){
             this.x = -this.side/2;
         }
         if(this.x<-this.side/2){
@@ -88,7 +88,7 @@ var Ship = function(){
 			this.yLeft = this.yLeft + this.speedY;
         }
     }
-	
+
     this.rotate = function(sense,ctx){
         var sensibility = Math.PI/8;
         if(sense === "left"){
@@ -257,7 +257,7 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     /* this.destroy = function(ctx){
       /*Aquí el asteroide se dividirá en 2 pequeños o si es pequeño (radio<algo)
       saldrá una secuencia de destrozar*/
-	  
+
       /* this.radius = this.radius/2;
     } */
 
@@ -268,6 +268,14 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
           return false;
         }
     }
+}
+
+
+function Score(){
+/*MARCADOR QUE INDICA PUNTUACIÓN Y VIDAS)*/
+  this.draw = function(ctx){
+
+  }
 }
 
 function resizeCanvas(canvas) {
@@ -288,17 +296,15 @@ function removeOutOfBoundBullet(bullets){
 
 function gameOver(ctx){
   /* var canvas = document.getElementById("fondo");
-  var ctx = canvas.getContext("2d");  */ 
+  var ctx = canvas.getContext("2d");  */
   ctx.fillStyle =("#FFFFFF");
   ctx.font = "60px Arial";
-  ctx.fillText("GAME OVER",10,50);  
+  ctx.fillText("GAME OVER",10,50);
   /*document.write("<h1>GAME OVER</h1>");*/
   endSound.play();
 }
 
 function muteGame(){
-
-  // var btn = document.getElementById("mute");
 
   if(!pew.muted){
   pew.muted = true;
@@ -306,7 +312,7 @@ function muteGame(){
   endSound.muted = true;
   reactor.muted = true;
   explosion.muted = true;
-  document.getElementById("speaker").textContent =  "volume_up";
+  document.getElementById("speaker").textContent =  "volume_off";
 }
   else{
     pew.muted = false;
@@ -314,7 +320,7 @@ function muteGame(){
     endSound.muted = false;
     reactor.muted = false;
     explosion.muted = false;
-    document.getElementById("speaker").textContent =  "volume_off";
+    document.getElementById("speaker").textContent =  "volume_up";
   }
 }
 
@@ -356,7 +362,7 @@ function refresh(ship, asteroid, bullets, contexto, backg){
 			  if(asteroid[i].radius > 20){
 				asteroid.splice(i,1,new Asteroid(asteroid[i].x + 55,asteroid[i].y,asteroid[i].radius/2,asteroid[i].speedX,asteroid[i].speedY,asteroid[i].rotationSpeed/2),
 			                      new Asteroid(asteroid[i].x - 55,asteroid[i].y,asteroid[i].radius/2,-asteroid[i].speedX,-asteroid[i].speedY,asteroid[i].rotationSpeed/2));
-              
+
 			  }
 			  else {
 				asteroid.splice(i,1);
@@ -374,7 +380,7 @@ function refresh(ship, asteroid, bullets, contexto, backg){
     // console.log("inmune? "+ship.inmune)
 }
 
-function spawnAsteroids(asteroids,number, level){ 
+function spawnAsteroids(asteroids,number, level){
 /*level aumentará la speed*/
 /*https://stackoverflow.com/questions/6254050/how-to-add-an-object-to-an-array*/
 
