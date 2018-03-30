@@ -367,7 +367,7 @@ function refresh(ship, asteroid, bullets, contexto, backg){
           }
     }
     if(asteroid.length<=0){
-      spawnAsteroids(asteroid,5,2);
+      spawnAsteroids(asteroid,3,2);
     }
     console.log('lives: '+ship.lives);
     console.log(asteroid.length);
@@ -413,7 +413,7 @@ window.onload = function(){
 		var ship = new Ship();
 		var backg = new Backg();
 		resizeCanvas(elemCanvas);
-		spawnAsteroids(asteroids,5,2);
+		spawnAsteroids(asteroids,3,2);
 		ship.death();
 		/*Observamos si se ha pulsado alguna tecla del teclado*/
 		document.onkeydown = function(e) {
