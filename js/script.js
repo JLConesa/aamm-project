@@ -34,7 +34,7 @@ var Ship = function(){
     this.topY = this.y - 37;
 
     /*atributes*/
-    this.lives = 2;
+    this.lifes = 2;
     this.inmune = true;
     this.exploding = false;
 
@@ -43,6 +43,8 @@ var Ship = function(){
     this.sprite.src = "img/TempestShipIcon.png";
     this.explosion = new Image();
     this.explosion.src = "img/explosion.png";
+    this.inmuneSprite = new Image();
+    this.inmuneSprite.src = "img/Inmune.png";
     this.explosionXCounter = 0;
     this.explosionYCounter = 0;
 
@@ -121,30 +123,34 @@ var Ship = function(){
 
   	this.draw = function(ctx, collition){
       if(this.exploding === false){
-        if(collition){
-          ctx.strokeStyle="red";
-        }else if(this.inmune){
-          ctx.strokeStyle="blue";
-        }else{
-          ctx.strokeStyle="#FFFFFF";
-        }
-        ctx.lineWidth="1";
-        ctx.save();
-        ctx.translate(this.x,this.y);
-        ctx.rotate(-this.direction);
-        ctx.drawImage(this.sprite,-this.sprite.width/2,-60);
-        ctx.rotate(this.direction);
+          if(collition){
+            ctx.strokeStyle="red";
+          }else if(this.inmune){
+            ctx.strokeStyle="blue";
+          }else{
+            ctx.strokeStyle="#FFFFFF";
+          }
+          ctx.lineWidth="1";
+          ctx.save();
+          ctx.translate(this.x,this.y);
+          ctx.rotate(-this.direction);
+          if(this.inmune){
+            ctx.drawImage(this.inmuneSprite,-this.sprite.width/2,-60);
+          }else{
+            ctx.drawImage(this.sprite,-this.sprite.width/2,-60);
+          }
+          ctx.rotate(this.direction);
 
-        ctx.beginPath();
-        ctx.arc(0, 0, this.radious, 0, 2*Math.PI);
-        ctx.closePath();
-        ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(0, 0, this.radious, 0, 2*Math.PI);
+          ctx.closePath();
+          ctx.stroke();
 
-        ctx.beginPath();
-        ctx.arc(this.topX-this.x, this.topY-this.y, this.scndRadious, 0, 2*Math.PI);
-        ctx.closePath();
-        ctx.stroke();
-        ctx.restore();
+          ctx.beginPath();
+          ctx.arc(this.topX-this.x, this.topY-this.y, this.scndRadious, 0, 2*Math.PI);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.restore();
       }else{
         ctx.save();
         ctx.translate(this.x,this.y);
@@ -157,7 +163,7 @@ var Ship = function(){
           this.inmune = true;
           this.explosionXCounter = 0;
           this.explosionXCounter = 0;
-          if(this.lives >=0 ){
+          if(this.lifes >=0 ){
             startSound.play();
           }
           this.init();
@@ -181,8 +187,8 @@ var Ship = function(){
         explosion.play();
         this.exploding = true;
         this.inmune = true;
-        this.lives = this.lives-1;
-        if(this.lives<0){
+        this.lifes = this.lifes-1;
+        if(this.lifes<0){
           this.radious=0;
         }
       }
@@ -318,6 +324,12 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     }
 }
 
+var Score = function(lifes,puntuation){
+  this.draw = function(){
+
+  }
+}
+
 function resizeCanvas(canvas) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -342,6 +354,10 @@ function gameOver(ctx){
   ctx.fillText("GAME OVER",10,50);
   /*document.write("<h1>GAME OVER</h1>");*/
   endSound.play();
+  if(endSound.ended){
+    endSound.pause();
+    endSound.muted = true;
+  }
 }
 
 function muteGame(){
@@ -402,12 +418,12 @@ function refresh(ship, asteroid, bullets, contexto, backg){
     }
 
 
-    if (ship.lives<0 && ship.exploding === false){
+    if (ship.lifes<0 && ship.exploding === false){
         gameOver(contexto);
     }else{
       ship.draw(contexto, false);
     }
-    console.log('lives: '+ship.lives);
+    console.log('lifes: '+ship.lifes);
     //console.log(asteroid.length);
     // console.log("inmune? "+ship.inmune)
 }
