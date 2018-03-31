@@ -360,8 +360,8 @@ function refresh(ship, asteroid, bullets, contexto, backg){
             if(asteroid[i].hasCollided(bullets[j])){
               //asteroid[i].destroy();
 			  if(asteroid[i].radius > 20){
-				asteroid.splice(i,1,new Asteroid(asteroid[i].x + 55,asteroid[i].y,asteroid[i].radius/2,asteroid[i].speedX,asteroid[i].speedY,asteroid[i].rotationSpeed/2),
-			                      new Asteroid(asteroid[i].x - 55,asteroid[i].y,asteroid[i].radius/2,-asteroid[i].speedX,-asteroid[i].speedY,asteroid[i].rotationSpeed/2));
+				asteroid.splice(i,1,new Asteroid(asteroid[i].x + 55,asteroid[i].y,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX,asteroid[i].speedY,asteroid[i].rotationSpeed/2),
+			                      new Asteroid(asteroid[i].x - 55,asteroid[i].y,asteroid[i].radius/Math.sqrt(2),-asteroid[i].speedX,-asteroid[i].speedY,asteroid[i].rotationSpeed/2));
 
 			  }
 			  else {
