@@ -253,9 +253,9 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     if(this.radius === 55){
       this.sprite.src = "img/xlAsteroid.png";
     }else if(this.radius === 27.5){
-      this.sprite.src = "img/mAsteroid.png";
-    }else{
       this.sprite.src = "img/sAsteroid.png";
+    }else{
+      this.sprite.src = "img/mAsteroid.png";
     }
 
     console.log(this.radius);
@@ -354,14 +354,14 @@ function muteGame(){
   endSound.muted = true;
   reactor.muted = true;
   explosion.muted = true;
-  document.getElementById("speaker").textContent =  "volume_up";
+  document.getElementById("speaker").textContent =  "volume_off";
   }else{
     pew.muted = false;
     startSound.muted = false;
     endSound.muted = false;
     reactor.muted = false;
     explosion.muted = false;
-    document.getElementById("speaker").textContent =  "volume_off";
+    document.getElementById("speaker").textContent =  "volume_up";
   }
 }
 
@@ -386,9 +386,9 @@ function refresh(ship, asteroid, bullets, contexto, backg){
           bullets[j].draw(contexto);
           if(asteroid[i].hasCollided(bullets[j])){
               //asteroid[i].destroy();
-			        if(asteroid[i].radius > 20){
-				            asteroid.splice(i,1,new Asteroid(asteroid[i].x + 5,asteroid[i].y,asteroid[i].radius/2,asteroid[i].speedX,asteroid[i].speedY,asteroid[i].rotationSpeed),
-			                            new Asteroid(asteroid[i].x - 5,asteroid[i].y,asteroid[i].radius/2,-asteroid[i].speedX,-asteroid[i].speedY,asteroid[i].rotationSpeed));
+			        if(asteroid[i].radius > 30){
+				            asteroid.splice(i,1,new Asteroid(asteroid[i].x + 5,asteroid[i].y,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX,asteroid[i].speedY,asteroid[i].rotationSpeed),
+			                            new Asteroid(asteroid[i].x - 5,asteroid[i].y,asteroid[i].radius/Math.sqrt(2),-asteroid[i].speedX,-asteroid[i].speedY,asteroid[i].rotationSpeed));
               }else{
 				            asteroid.splice(i,1);
 			        }
@@ -462,7 +462,7 @@ window.onload = function(){
 				key(e, ship, bullets, contexto);
 		}
 		/*SetInterval llama a una funcion cada cierto periodo de tiempo (en milisegundos)*/
-		setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 120);
+		setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 16);
 	}
     else{
 		alert('Navegador Incompatible');
