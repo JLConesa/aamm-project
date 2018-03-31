@@ -22,169 +22,198 @@ var Backg = function(){
 }
 
 var Ship = function(){
-    this.side = 70;
-    this.lives = 3; /*Vidas*/
-    this.inmune = false;
 
-  	this.x = window.innerWidth/2;  /*Se inicializa en el centro*/
-  	this.y = window.innerHeight/2; /*Se inicializa en el centro*/
+    /*init. values*/
+    this.radious = 24;/*radious obtained from sprite*/
+    this.x = window.innerWidth/2;  /*centered initial position*/
+  	this.y = window.innerHeight/2; /*centered initial position*/
 
-    this.xRight = this.x + this.side/2;
-    this.yRight = this.y + this.side;
+    /*hitbox, from the sprite*/
+    this.scndRadious = 13;
+    this.topX = this.x;
+    this.topY = this.y - 37;
 
-    this.xLeft = this.x - this.side/2;
-    this.yLeft = this.y + this.side;
+    /*atributes*/
+    this.lives = 2;
+    this.inmune = true;
+    this.exploding = false;
 
-    this.centerX = (this.xRight-this.xLeft)/2;
-    this.centerY = this.y+this.side/2;
+    /*ship sprite*/
+    this.sprite = new Image();
+    this.sprite.src = "img/TempestShipIcon.png";
+    this.explosion = new Image();
+    this.explosion.src = "img/explosion.png";
+    this.explosionXCounter = 0;
+    this.explosionYCounter = 0;
 
-
-    this.direction = 0; /*esta variable indicará hacia donde apunta la nave*/
+    /*movement*/
+    this.direction = 0; /*this var stores where the ship is pointing*/
     this.speedX = 0;
     this.speedY = -10;
-    this.speed = 15; /*Velocidad general de la nave*/
+    this.speed = 15; /*ship speed*/
 
     this.init = function(){
-      this.side = 70;
+      /*init. values*/
+      this.radious = 24;/*radious obtained from sprite*/
+      this.x = window.innerWidth/2;  /*centered initial position*/
+    	this.y = window.innerHeight/2; /*centered initial position*/
 
-      this.x = window.innerWidth/2;  /*Se inicializa en el centro*/
-      this.y = window.innerHeight/2; /*Se inicializa en el centro*/
+      /*hitbox, from the sprite*/
+      this.scndRadious = 13;
+      this.topX = this.x;
+      this.topY = this.y - 37;
 
-      this.xRight = this.x + this.side/2;
-      this.yRight = this.y + this.side;
+      /*ship sprite*/
+      this.sprite = new Image();
+      this.sprite.src = "img/TempestShipIcon.png";
+      this.explosion = new Image();
+      this.explosion.src = "img/explosion.png";
+      this.explosionXCounter = 0;
+      this.explosionYCounter = 0;
 
-      this.xLeft = this.x - this.side/2;
-      this.yLeft = this.y + this.side;
-
-      this.centerX = (this.xRight-this.xLeft)/2;
-      this.centerY = this.y+this.side/2;
-
-
-      this.direction = 0; /*esta variable indicará hacia donde apunta la nave*/
+      /*movement*/
+      this.direction = 0; /*this var stores where the ship is pointing*/
       this.speedX = 0;
       this.speedY = -10;
-      this.speed = 15; /* Velocidad general de la nave*/
+      this.speed = 15; /*ship speed*/
     }
 
     this.move = function(){  /*acelera en la direction de la nave*/
-		 if(this.x>window.innerWidth+this.side/2){
-            this.x = -this.side/2;
+      if(this.exploding === false){
+        if(this.x>window.innerWidth+this.radious/2){
+          this.x = -this.radious/2;
+          this.topX = -this.radious/2;
         }
-        if(this.x<-this.side/2){
-            this.x = window.innerWidth+this.side/2;
+        if(this.x<-this.radious/2){
+          this.x = window.innerWidth+this.radious/2;
+          this.topX = window.innerWidth+this.radious/2;
         }else{
-            this.x = this.x + this.speedX;
-			this.xRight = this.xRight + this.speedX;
-			this.xLeft = this.xLeft + this.speedX;
+          this.x = this.x + this.speedX;
+  			  this.topX = this.topX + this.speedX;
         }
-        if(this.y>window.innerHeight+this.side/2){
-            this.y = -this.side/2;
+        if(this.y>window.innerHeight+this.radious/2){
+          this.y = -this.radious/2;
+          this.topY = -this.radious/2 - 37;
         }
-        if(this.y<-this.side/2){
-            this.y = window.innerHeight+this.side/2;
+        if(this.y<-this.radious/2){
+          this.y = window.innerHeight+this.radious/2;
+          this.topY = window.innerHeight+this.radious/2 - 37;
         }else{
-            this.y = this.y + this.speedY;
-			this.yRight = this.yRight + this.speedY;
-			this.yLeft = this.yLeft + this.speedY;
+          this.y = this.y + this.speedY;
+  			  this.topY = this.topY + this.speedY;
         }
+      }
     }
 
     this.rotate = function(sense,ctx){
         var sensibility = Math.PI/8;
         if(sense === "left"){
-
             this.direction = this.direction + sensibility;
-            /*this.x = ship.side*cos(this.direction);
-            this.y = ship.side*sin(this.direction);*/
         }
         if(sense === "right"){
             this.direction = this.direction - sensibility;
         }
+        this.topX = this.x - 37*Math.sin(this.direction);
+        this.topY = this.y - 37*Math.cos(this.direction);
         this.speedX = -this.speed*Math.sin(this.direction);
         this.speedY = -this.speed*Math.cos(this.direction);
     }
 
   	this.draw = function(ctx, collition){
-      if(collition){
-        ctx.strokeStyle="red";
-      }else if(this.inmune){
-        ctx.strokeStyle="blue";
+      if(this.exploding === false){
+        if(collition){
+          ctx.strokeStyle="red";
+        }else if(this.inmune){
+          ctx.strokeStyle="blue";
+        }else{
+          ctx.strokeStyle="#FFFFFF";
+        }
+        ctx.lineWidth="1";
+        ctx.save();
+        ctx.translate(this.x,this.y);
+        ctx.rotate(-this.direction);
+        ctx.drawImage(this.sprite,-this.sprite.width/2,-60);
+        ctx.rotate(this.direction);
 
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radious, 0, 2*Math.PI);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(this.topX-this.x, this.topY-this.y, this.scndRadious, 0, 2*Math.PI);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
       }else{
-        ctx.strokeStyle="#FFFFFF";
+        ctx.save();
+        ctx.translate(this.x,this.y);
+        ctx.drawImage(this.explosion,this.explosionXCounter*100, this.explosionYCounter*100, 100, 100, -50, -50, 100, 100);
+        ctx.restore();
+        this.explosionXCounter = this.explosionXCounter + 1;
+        this.explosionYCounter = this.explosionYCounter + 1;
+        if(this.explosionXCounter === 10 && this.explosionYCounter === 10){
+          this.exploding = false;
+          this.inmune = true;
+          this.explosionXCounter = 0;
+          this.explosionXCounter = 0;
+          if(this.lives >=0 ){
+            startSound.play();
+          }
+          this.init();
+        }
+        if(this.explosionXCounter === 10){
+          this.explosionXCounter = 0;
+        }
       }
-      ctx.lineWidth="1";
-      ctx.save();
-      ctx.translate(this.x,this.y);
-      ctx.rotate(-this.direction);
-
-  		//ctx.moveTo(this.x,this.y);
-      ctx.beginPath();
-  		//ctx.lineTo(this.xRight,this.yRight);
-      ctx.lineTo(-this.side/2, this.side);
-  		//ctx.lineTo(this.xLeft,this.yLeft);
-      ctx.lineTo(this.side/2,this.side);
-  		//ctx.lineTo(this.x,this.y);
-      ctx.lineTo(0,0);
-  		ctx.closePath();
-  		ctx.stroke();
-      //ctx.translate(this.x, this.y);
-      ctx.restore();
   	}
 
     this.shoot = function(bullet){
-      bullet.push(new Bullet(this.x, this.y, 4, this.direction, 3));
+      bullet.push(new Bullet(this.topX, this.topY, 4, this.direction, 3));
       // console.log("pium");
       pew.play();
     }
 
     this.death = function(){
+
       /*Desaparece la nave, quita una vida o pierdes el juego*/
-      if(this.inmune == false){
-      this.x = 8000;
-      this.side = 0; //meter animación destrozar lol
-      this.lives = this.lives-1;
-      this.inmune = true;
-      startSound.play();
-      //setTimeout(0,3000);
-      this.init();
-      if(this.lives<=0){
-        this.side=0;
-        gameOver();
-      }
+      if(this.inmune === false){
+        explosion.play();
+        this.exploding = true;
+        this.inmune = true;
+        this.lives = this.lives-1;
+        if(this.lives<0){
+          this.radious=0;
+        }
       }
 
     }
+
     this.hasCollided = function(asteroid){
-        dx1 = Math.abs(asteroid.x - this.x);
-        dy1 = Math.abs(asteroid.y - this.y);
+      if(this.exploding === false){
+        dx = Math.abs(asteroid.x - this.x);
+        dy = Math.abs(asteroid.y - this.y);
 
-        dx2 = Math.abs(asteroid.x - this.xRight);
-        dy2 = Math.abs(asteroid.y - this.yRight);
+        dtopX = Math.abs(asteroid.x - this.topX);
+        dtopY = Math.abs(asteroid.y - this.topY);
 
-        dx3 = Math.abs(asteroid.x - this.xLeft);
-        dy3 = Math.abs(asteroid.y - this.yLeft);
+        distance = Math.sqrt(Math.pow(dx,2)+Math.pow(dy,2));
+        topDistance = Math.sqrt(Math.pow(dtopX,2)+Math.pow(dtopY,2));
 
-        distance1 = Math.sqrt( Math.pow(dx1,2) +  Math.pow(dy1,2));
-        distance2 = Math.sqrt( Math.pow(dx2,2) +  Math.pow(dy2,2));
-        distance3 = Math.sqrt( Math.pow(dx3,2) +  Math.pow(dy3,2));
+        distCollition = this.radious + asteroid.radius;
+        topDistCollition = this.scndRadious + asteroid.radius
 
-        minDist1 = distance1;
-        minDist2 = distance2;
-
-        if(minDist1 > distance3){
-          minDist1 = distance3;
-        }else if(minDist2 > distance3){
-          minDist2 = distance3;
-        }
-
-        distanceCollition = Math.sqrt(Math.pow(this.side/2, 2) + Math.pow(asteroid.radius, 2));
-        if(Math.sqrt(Math.pow(minDist1, 2) + Math.pow(minDist1, 2)) < distanceCollition){
+        if(distance < distCollition){
+          return true;
+        }else if(topDistance < topDistCollition){
           return true;
         }else{
           return false;
         }
+      }else{
+        return false;
       }
+    }
 }
 
 var Bullet = function(x,y, speed, angle, longitude){
@@ -220,9 +249,20 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     this.x = x;
     this.y = y;
     this.radius = radius;
+    this.sprite = new Image();
+    if(this.radius === 55){
+      this.sprite.src = "img/xlAsteroid.png";
+    }else if(this.radius === 27.5){
+      this.sprite.src = "img/mAsteroid.png";
+    }else{
+      this.sprite.src = "img/sAsteroid.png";
+    }
+
+    console.log(this.radius);
     this.speedX = speedX;
     this.speedY = speedY;
     this.rotationSpeed = rotationSpeed;
+    this.direction = 0;
 
     this.move = function(){
         if(this.x>window.innerWidth+45){ /*cambiar 45 por this.radius*/
@@ -241,15 +281,25 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
         }else{
             this.y = this.y + this.speedY;
         }
+
+        this.direction = this.direction + this.rotationSpeed;
     }
 
     this.draw = function(ctx) {
+        ctx.save();
+        ctx.translate(this.x,this.y);
+        ctx.rotate(-this.direction);
+        ctx.drawImage(this.sprite,-this.sprite.width/2,-this.sprite.height/2);
+        ctx.rotate(this.direction);
+
         ctx.strokeStyle="#FFFFFF";
 		    ctx.lineWidth = '2';
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+        ctx.arc(0, 0, this.radius, 0, 2*Math.PI);
         ctx.closePath();
 		    ctx.stroke();
+
+        ctx.restore();
     }
 
     /* this.destroy = function(ctx){
@@ -266,14 +316,6 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
           return false;
         }
     }
-}
-
-
-function Score(){
-/*MARCADOR QUE INDICA PUNTUACIÓN Y VIDAS)*/
-  this.draw = function(ctx){
-
-  }
 }
 
 function resizeCanvas(canvas) {
@@ -304,45 +346,32 @@ function gameOver(ctx){
 
 function muteGame(){
 
+  // var btn = document.getElementById("mute");
+
   if(!pew.muted){
   pew.muted = true;
   startSound.muted = true;
   endSound.muted = true;
   reactor.muted = true;
   explosion.muted = true;
-  document.getElementById("speaker").textContent =  "volume_off";
-}
-  else{
+  document.getElementById("speaker").textContent =  "volume_up";
+  }else{
     pew.muted = false;
     startSound.muted = false;
     endSound.muted = false;
     reactor.muted = false;
     explosion.muted = false;
-    document.getElementById("speaker").textContent =  "volume_up";
+    document.getElementById("speaker").textContent =  "volume_off";
   }
 }
-
-
 
 function refresh(ship, asteroid, bullets, contexto, backg){
 	/*Esta función nos ayuda a refrescar la pantalla del canvas, se realizará cada cierto tiempo*/
     backg.draw(contexto); /*dibuja el fondo de la pantalla*/
-    ship.draw(contexto, false); /*dibuja la nave (triángulo)*/
-    if (ship.lives<=0){
-		gameOver(contexto);
-	}
 
-    if(startSound.ended){
+    if(startSound.ended){ /*end he inmune period*/
       ship.inmune = false;
     }
-
-    /*if(ship.inmune){
-      startSound.play();
-      if(startSound.ended){
-        ship.inmune = false;
-      }
-    }*/
-    //setTimeout(function(){if(ship.inmune){ship.inmune = false;}},3000);
 
     for(i=0; i<asteroid.length; i++){
         asteroid[i].move();
@@ -352,38 +381,43 @@ function refresh(ship, asteroid, bullets, contexto, backg){
           ship.death();
         }
 
-          for(j=0; j<bullets.length; j++){
-            bullets[j].move();
-            bullets[j].draw(contexto);
-            if(asteroid[i].hasCollided(bullets[j])){
+        for(j=0; j<bullets.length; j++){
+          bullets[j].move();
+          bullets[j].draw(contexto);
+          if(asteroid[i].hasCollided(bullets[j])){
               //asteroid[i].destroy();
-			  if(asteroid[i].radius > 30){
-				asteroid.splice(i,1,new Asteroid(asteroid[i].x,asteroid[i].y,asteroid[i].radius/Math.sqrt(2),Math.random()*5-Math.random()*4,Math.random()*5-Math.random()*4,asteroid[i].rotationSpeed),
-			                      new Asteroid(asteroid[i].x,asteroid[i].y,asteroid[i].radius/Math.sqrt(2),Math.random()*4-Math.random()*5,Math.random()*4-Math.random()*5,asteroid[i].rotationSpeed));
-
-			  }
-			  else {
-				asteroid.splice(i,1);
-			  }
-			explosion.play();
-            bullets.splice(j,1); /*Elimina la bullet del array*/
+			        if(asteroid[i].radius > 20){
+				            asteroid.splice(i,1,new Asteroid(asteroid[i].x + 5,asteroid[i].y,asteroid[i].radius/2,asteroid[i].speedX,asteroid[i].speedY,asteroid[i].rotationSpeed),
+			                            new Asteroid(asteroid[i].x - 5,asteroid[i].y,asteroid[i].radius/2,-asteroid[i].speedX,-asteroid[i].speedY,asteroid[i].rotationSpeed));
+              }else{
+				            asteroid.splice(i,1);
+			        }
+			        explosion.play();
+              bullets.splice(j,1); /*Elimina la bullet del array*/
             }
-          }
+        }
     }
     if(asteroid.length<=0){
       spawnAsteroids(asteroid,3,2);
     }
+
+
+    if (ship.lives<0 && ship.exploding === false){
+        gameOver(contexto);
+    }else{
+      ship.draw(contexto, false);
+    }
     console.log('lives: '+ship.lives);
-    console.log(asteroid.length);
+    //console.log(asteroid.length);
     // console.log("inmune? "+ship.inmune)
 }
 
 function spawnAsteroids(asteroids,number, level){
-/*level aumentará la speed*/
-/*https://stackoverflow.com/questions/6254050/how-to-add-an-object-to-an-array*/
+  /*level aumentará la speed*/
+  /*https://stackoverflow.com/questions/6254050/how-to-add-an-object-to-an-array*/
 
     for(i=0; i<number; i++){
-        asteroids.push(new Asteroid(Math.random()*window.innerWidth,Math.random()*window.innerHeight,55,Math.random()*5-Math.random()*5,Math.random()*5-Math.random()*5,Math.random()*5));
+        asteroids.push(new Asteroid(Math.random()*window.innerWidth,Math.random()*window.innerHeight,55,Math.random()*2-Math.random()*2,Math.random()*2-Math.random()*2,Math.random()*0.05));
     }
 }
 
@@ -406,25 +440,29 @@ function key (e,ship, bullets,contexto){
 }
 
 window.onload = function(){
+
+
 	var startSound = document.getElementById("startSound");
 	var endSound = document.getElementById("endSound");
 	var pew = document.getElementById("pew");
 	var reactor = document.getElementById("reactor");
 	var explosion = document.getElementById("explosion");
 	var elemCanvas = document.getElementById('fondo');
+
 	if (elemCanvas && elemCanvas.getContext){
 		var contexto = elemCanvas.getContext('2d');
 		var ship = new Ship();
 		var backg = new Backg();
 		resizeCanvas(elemCanvas);
 		spawnAsteroids(asteroids,3,2);
-		ship.death();
+    startSound.play();
+
 		/*Observamos si se ha pulsado alguna tecla del teclado*/
 		document.onkeydown = function(e) {
 				key(e, ship, bullets, contexto);
 		}
 		/*SetInterval llama a una funcion cada cierto periodo de tiempo (en milisegundos)*/
-		setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 16);
+		setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 120);
 	}
     else{
 		alert('Navegador Incompatible');
