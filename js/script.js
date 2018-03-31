@@ -245,13 +245,11 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
 
     this.draw = function(ctx) {
         ctx.strokeStyle="#FFFFFF";
-		ctx.lineWidth = '2';
+		    ctx.lineWidth = '2';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
-		ctx.fillStyle="#FFFFFF";
-		ctx.fill();
         ctx.closePath();
-		ctx.stroke();
+		    ctx.stroke();
     }
 
     /* this.destroy = function(ctx){
