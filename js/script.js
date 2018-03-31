@@ -308,12 +308,6 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
         ctx.restore();
     }
 
-    /* this.destroy = function(ctx){
-      /*Aquí el asteroide se dividirá en 2 pequeños o si es pequeño (radio<algo)
-      saldrá una secuencia de destrozar*/
-
-      /* this.radius = this.radius/2;
-    } */
 
     this.hasCollided = function(bullet){
         if(Math.abs(bullet.x-this.x)<this.radius && Math.abs(bullet.y-this.y)<this.radius){
@@ -324,8 +318,11 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     }
 }
 
-var Score = function(lifes,puntuation){
-  this.draw = function(){
+var Score = function(lifes,puntuation,ctx){
+  this.draw = function(lifes){
+    ctx.fillStyle =("#FFFFFF");
+    ctx.font = "40px Arial";
+    ctx.fillText("Lifes: "+lifes,10,50);
 
   }
 }
@@ -362,8 +359,6 @@ function gameOver(ctx){
 
 function muteGame(){
 
-  // var btn = document.getElementById("mute");
-
   if(!pew.muted){
   pew.muted = true;
   startSound.muted = true;
@@ -381,7 +376,7 @@ function muteGame(){
   }
 }
 
-function refresh(ship, asteroid, bullets, contexto, backg){
+function refresh(ship, asteroid, bullets, contexto, backg, score){
 	/*Esta función nos ayuda a refrescar la pantalla del canvas, se realizará cada cierto tiempo*/
     backg.draw(contexto); /*dibuja el fondo de la pantalla*/
 
@@ -423,6 +418,7 @@ function refresh(ship, asteroid, bullets, contexto, backg){
     }else{
       ship.draw(contexto, false);
     }
+    score.draw(ship.lifes);
     console.log('lifes: '+ship.lifes);
     //console.log(asteroid.length);
     // console.log("inmune? "+ship.inmune)
@@ -469,6 +465,7 @@ window.onload = function(){
 		var contexto = elemCanvas.getContext('2d');
 		var ship = new Ship();
 		var backg = new Backg();
+    var score = new Score(ship.lifes,0,contexto);
 		resizeCanvas(elemCanvas);
 		spawnAsteroids(asteroids,3,2);
     startSound.play();
@@ -478,7 +475,7 @@ window.onload = function(){
 				key(e, ship, bullets, contexto);
 		}
 		/*SetInterval llama a una funcion cada cierto periodo de tiempo (en milisegundos)*/
-		setInterval(function(){refresh(ship, asteroids, bullets, contexto,backg)}, 16);
+		setInterval(function(){refresh(ship, asteroids, bullets, contexto, backg, score)}, 16);
 	}
     else{
 		alert('Navegador Incompatible');
