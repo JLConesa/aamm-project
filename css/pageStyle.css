@@ -16,6 +16,7 @@ h1{
 }
 
 p{
+  font-family: inherit;
   /* margin-left:5%; */
   /* text-align: justify; */
 }
