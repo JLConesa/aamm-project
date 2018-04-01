@@ -14,7 +14,7 @@ Detección de pulsaciones de teclas y ratón.
 ### José Luis Conesa
 Detección de colisiones.
 ### Pablo Lago
-Animación.
+Diseño de la página y el logo de inicio. Implementación de Material Design Lite. Composición de los sonidos y música utilizados en el juego. Botón de muteo. Aportación a la mecánica y la animación de juego.
 ### Kenza Marrakchi
 Detección de pulsaciones de teclas y ratón.
 
