@@ -258,7 +258,8 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     this.sprite = new Image();
     if(this.radius === 55){
       this.sprite.src = "img/xlAsteroid.png";
-    }else if(this.radius === 27.5){
+    }else if(this.radius < 27.5){
+      console.log(this.radius);
       this.sprite.src = "img/sAsteroid.png";
     }else{
       this.sprite.src = "img/mAsteroid.png";
@@ -322,7 +323,8 @@ var Score = function(lifes,puntuation,ctx){
   this.draw = function(lifes){
     ctx.fillStyle =("#FFFFFF");
     ctx.font = "40px Arial";
-    ctx.fillText("Lifes: "+lifes,10,50);
+    ctx.textAlign="center";
+    ctx.fillText("Lifes: "+lifes,window.innerWidth/2,50);
 
   }
 }
