@@ -75,7 +75,7 @@ footer{
     font-size: 20px;
     color: rgba(255, 255, 255, 0.3);
     padding-top: 20px;
-    border: solid red 2px;
+    /* border: solid red 2px; */
 }
 
 footer:hover{
