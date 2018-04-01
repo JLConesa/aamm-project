@@ -24,12 +24,12 @@ var Backg = function(){
 var Ship = function(){
 
     /*init. values*/
-    this.radious = 24;/*radious obtained from sprite*/
+    this.radius = 24;/*radius obtained from sprite*/
     this.x = window.innerWidth/2;  /*centered initial position*/
   	this.y = window.innerHeight/2; /*centered initial position*/
 
     /*hitbox, from the sprite*/
-    this.scndRadious = 13;
+    this.scndradius = 13;
     this.topX = this.x;
     this.topY = this.y - 37;
 
@@ -57,12 +57,12 @@ var Ship = function(){
 
     this.init = function(){
       /*init. values*/
-      this.radious = 24;/*radious obtained from sprite*/
+      this.radius = 24;/*radius obtained from sprite*/
       this.x = window.innerWidth/2;  /*centered initial position*/
     	this.y = window.innerHeight/2; /*centered initial position*/
 
       /*hitbox, from the sprite*/
-      this.scndRadious = 13;
+      this.scndradius = 13;
       this.topX = this.x;
       this.topY = this.y - 37;
 
@@ -83,24 +83,24 @@ var Ship = function(){
 
     this.move = function(){  /*acelera en la direction de la nave*/
       if(this.exploding === false){
-        if(this.x>window.innerWidth+this.radious/2){
-          this.x = -this.radious/2;
-          this.topX = -this.radious/2;
+        if(this.x>window.innerWidth+this.radius/2){
+          this.x = -this.radius/2;
+          this.topX = -this.radius/2;
         }
-        if(this.x<-this.radious/2){
-          this.x = window.innerWidth+this.radious/2;
-          this.topX = window.innerWidth+this.radious/2;
+        if(this.x<-this.radius/2){
+          this.x = window.innerWidth+this.radius/2;
+          this.topX = window.innerWidth+this.radius/2;
         }else{
           this.x = this.x + this.speedX;
   			  this.topX = this.topX + this.speedX;
         }
-        if(this.y>window.innerHeight+this.radious/2){
-          this.y = -this.radious/2;
-          this.topY = -this.radious/2 - 37;
+        if(this.y>window.innerHeight+this.radius/2){
+          this.y = -this.radius/2;
+          this.topY = -this.radius/2 - 37;
         }
-        if(this.y<-this.radious/2){
-          this.y = window.innerHeight+this.radious/2;
-          this.topY = window.innerHeight+this.radious/2 - 37;
+        if(this.y<-this.radius/2){
+          this.y = window.innerHeight+this.radius/2;
+          this.topY = window.innerHeight+this.radius/2 - 37;
         }else{
           this.y = this.y + this.speedY;
   			  this.topY = this.topY + this.speedY;
@@ -143,12 +143,12 @@ var Ship = function(){
           ctx.rotate(this.direction);
 
           ctx.beginPath();
-          ctx.arc(0, 0, this.radious, 0, 2*Math.PI);
+          ctx.arc(0, 0, this.radius, 0, 2*Math.PI);
           ctx.closePath();
           ctx.stroke();
 
           ctx.beginPath();
-          ctx.arc(this.topX-this.x, this.topY-this.y, this.scndRadious, 0, 2*Math.PI);
+          ctx.arc(this.topX-this.x, this.topY-this.y, this.scndradius, 0, 2*Math.PI);
           ctx.closePath();
           ctx.stroke();
           ctx.restore();
@@ -190,7 +190,7 @@ var Ship = function(){
         this.inmune = true;
         this.lives = this.lives-1;
         if(this.lives<0){
-          this.radious=0;
+          this.radius=0;
         }
       }
 
@@ -207,8 +207,8 @@ var Ship = function(){
         distance = Math.sqrt(Math.pow(dx,2)+Math.pow(dy,2));
         topDistance = Math.sqrt(Math.pow(dtopX,2)+Math.pow(dtopY,2));
 
-        distCollition = this.radious + asteroid.radius;
-        topDistCollition = this.scndRadious + asteroid.radius
+        distCollition = this.radius + asteroid.radius;
+        topDistCollition = this.scndradius + asteroid.radius
 
         if(distance < distCollition){
           return true;
