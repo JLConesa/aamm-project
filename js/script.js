@@ -441,8 +441,8 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
           if(asteroid[i].hasCollided(bullets[j])){
 			        if(asteroid[i].radius > 30){
                     score.points = score.points + (100 * (10 * (asteroid[i].radius % 1)));
-				            asteroid.splice(i,1,new Asteroid(asteroid[i].x+asteroid[i].speedX,asteroid[i].y-asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*3*Math.random(),-asteroid[i].speedY*2*Math.random(),asteroid[i].rotationSpeed),
-			                                  new Asteroid(asteroid[i].x-asteroid[i].speedX,asteroid[i].y+asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),-asteroid[i].speedX*2*Math.random(),asteroid[i].speedY*3*Math.random(),asteroid[i].rotationSpeed));
+				            asteroid.splice(i,1,new Asteroid(asteroid[i].x+asteroid[i].speedX,asteroid[i].y-asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*1*Math.random(),-asteroid[i].speedY*2*Math.random(),asteroid[i].rotationSpeed),
+			                                  new Asteroid(asteroid[i].x-asteroid[i].speedX,asteroid[i].y+asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),-asteroid[i].speedX*2*Math.random(),asteroid[i].speedY*1*Math.random(),asteroid[i].rotationSpeed));
               }else{
 				            asteroid.splice(i,1);
 			        }
