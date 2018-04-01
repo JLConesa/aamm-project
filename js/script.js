@@ -347,10 +347,10 @@ var Score = function(lives,points,ctx,lvl){
     ctx.fillStyle =("#FFFFFF");
     ctx.font = "40px Courier New";
     ctx.textAlign="center";
-    ctx.fillText(this.points,window.innerWidth/2,50);
+    ctx.fillText(Math.round(this.points),window.innerWidth/2,50);
     ctx.font = "25px Courier New";
-    ctx.fillText("Lives: "+lives,window.innerWidth-200,45);
-    ctx.fillText("Level: "+level,200,45);
+    ctx.fillText("Lives: "+lives,window.innerWidth-100,45);
+    ctx.fillText("Level: "+level,100,45);
 
   }
 }
@@ -365,10 +365,10 @@ function resizeCanvas(canvas) {
 }
 
 function spawnAsteroids(asteroids,number,lvl){
-  this.lvl = level;
+  this.lvl = level+1;
   /*level increases the speed*/
     for(i=0; i<number; i++){
-        asteroids.push(new Asteroid(Math.random()*window.innerWidth,Math.random()*window.innerHeight,55,Math.random()*2*level-Math.random()*2*level,Math.random()*2*level-Math.random()*2*level,Math.random()*0.05));
+        asteroids.push(new Asteroid(Math.random()*window.innerWidth,Math.random()*window.innerHeight,55,Math.random()*2*this.lvl-Math.random()*2*this.lvl,Math.random()*2*this.lvl-Math.random()*2*this.lvl,Math.random()*0.05));
     }
     level = level+1;
 }
@@ -440,9 +440,9 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
           bullets[j].draw(contexto);
           if(asteroid[i].hasCollided(bullets[j])){
 			        if(asteroid[i].radius > 30){
-                    score.points = 50 * 10 * asteroid[i].radius % 10;
-				            asteroid.splice(i,1,new Asteroid(asteroid[i].x+asteroid[i].speedX,asteroid[i].y-asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*3*Math.random(),asteroid[i].speedY*2*Math.random(),asteroid[i].rotationSpeed),
-			                                  new Asteroid(asteroid[i].x-asteroid[i].speedX,asteroid[i].y+asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*2*Math.random(),asteroid[i].speedY*3*Math.random(),asteroid[i].rotationSpeed));
+                    score.points = score.points + (100 * (10 * (asteroid[i].radius % 1)));
+				            asteroid.splice(i,1,new Asteroid(asteroid[i].x+asteroid[i].speedX,asteroid[i].y-asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*3*Math.random(),-asteroid[i].speedY*2*Math.random(),asteroid[i].rotationSpeed),
+			                                  new Asteroid(asteroid[i].x-asteroid[i].speedX,asteroid[i].y+asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),-asteroid[i].speedX*2*Math.random(),asteroid[i].speedY*3*Math.random(),asteroid[i].rotationSpeed));
               }else{
 				            asteroid.splice(i,1);
 			        }
