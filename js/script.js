@@ -34,7 +34,7 @@ var Ship = function(){
     this.topY = this.y - 37;
 
     /*atributes*/
-    this.lives = 2;
+    this.lives = 3;
     this.inmune = true;
     this.exploding = false;
     this.dead = false;
@@ -416,7 +416,7 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
     }
 
 
-    if (ship.lives<0 && ship.exploding === false && ship.dead == false){
+    if (ship.lives<=0 && ship.exploding === false && ship.dead == false){
         ship.dead = true;
         gameOver(contexto);
     }else{
