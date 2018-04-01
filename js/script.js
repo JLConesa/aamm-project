@@ -34,9 +34,10 @@ var Ship = function(){
     this.topY = this.y - 37;
 
     /*atributes*/
-    this.lifes = 2;
+    this.lives = 2;
     this.inmune = true;
     this.exploding = false;
+    this.dead = false;
 
     /*ship sprite*/
     this.sprite = new Image();
@@ -163,7 +164,7 @@ var Ship = function(){
           this.inmune = true;
           this.explosionXCounter = 0;
           this.explosionXCounter = 0;
-          if(this.lifes >=0 ){
+          if(this.lives >=0 ){
             startSound.play();
           }
           this.init();
@@ -187,8 +188,8 @@ var Ship = function(){
         explosion.play();
         this.exploding = true;
         this.inmune = true;
-        this.lifes = this.lifes-1;
-        if(this.lifes<0){
+        this.lives = this.lives-1;
+        if(this.lives<0){
           this.radious=0;
         }
       }
@@ -319,12 +320,12 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     }
 }
 
-var Score = function(lifes,puntuation,ctx){
-  this.draw = function(lifes){
+var Score = function(lives,puntuation,ctx){
+  this.draw = function(lives){
     ctx.fillStyle =("#FFFFFF");
     ctx.font = "40px Arial";
     ctx.textAlign="center";
-    ctx.fillText("Lives: "+lifes,window.innerWidth/2,50);
+    ctx.fillText("Lives: "+lives,window.innerWidth/2,50);
 
   }
 }
@@ -415,13 +416,16 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
     }
 
 
-    if (ship.lifes<0 && ship.exploding === false){
+    if (ship.lives<0 && ship.exploding === false && ship.dead == false){
+        ship.dead = true;
         gameOver(contexto);
     }else{
       ship.draw(contexto, false);
     }
-    score.draw(ship.lifes);
-    console.log('lifes: '+ship.lifes);
+    if(ship.dead == false){
+      score.draw(ship.lives);
+    }
+    console.log('lives: '+ship.lives);
     //console.log(asteroid.length);
     // console.log("inmune? "+ship.inmune)
 }
@@ -467,7 +471,7 @@ window.onload = function(){
 		var contexto = elemCanvas.getContext('2d');
 		var ship = new Ship();
 		var backg = new Backg();
-    var score = new Score(ship.lifes,0,contexto);
+    var score = new Score(ship.lives,0,contexto);
 		resizeCanvas(elemCanvas);
 		spawnAsteroids(asteroids,3,2);
     startSound.play();
