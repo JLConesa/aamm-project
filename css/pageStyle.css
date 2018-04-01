@@ -20,14 +20,26 @@ img#background{
 h1{
     font-size: 10vw;
     text-align: center;
-
+}
+h3{
+    font-size: 2vw;
+    /* text-align: center; */
+    color: rgb(150, 150, 255);
 }
 
 
 
 p, ol{
   font-family: inherit;
-  /* margin-left:5%; */
+  margin-left:5%;
+  margin-right: 5%;
+  text-align: justify;
+}
+
+p.authors{
+  font-family: inherit;
+  margin-left:0;
+  margin-right: 0;
   text-align: justify;
 }
 
