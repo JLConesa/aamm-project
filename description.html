@@ -48,15 +48,32 @@
 		<li>Durante el juego podemos decidir si queremos tener sonido o no mediante un botón de altavoz situado en la pantalla.</li>
   </ol>
 
-<footer>
-<nav>
-<a href="game.html">Jugar</a>
-<a href="description.html">Descripción</a>
-<a href="authors.html">Autores</a>
-<a href="development.html">Desarrollo</a>
-<a href="references.html">Referencias</a>
-</nav>
-</footer>
+  <footer>
+  <nav>
+  <div class="footnav" id="myFootnav">
+  <a href="index.html"vclass="active">Inicio</a>
+  <a href="game.html">Jugar</a>
+  <a href="description.html">Descripción</a>
+  <a href="authors.html">Autores</a>
+  <a href="development.html">Desarrollo</a>
+  <a href="references.html">Referencias</a>
+  <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
+  </div>
+  <div style="padding-left:16px">
+  </div>
+
+  <script>
+  function myFunction() {
+      var x = document.getElementById("myFootnav");
+      if (x.className === "footnav") {
+          x.className += " responsive";
+      } else {
+          x.className = "footnav";
+      }
+  }
+  </script>
+  </nav>
+  </footer>
 
 </body>
 </html>

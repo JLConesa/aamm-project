@@ -48,7 +48,8 @@
   <li><a href="https://devcode.la/tutoriales/animacion-con-canvas-de-html5/" target="_blank"> Example of movement code </a></li>
   <li><a href="https://salinasjavi.wordpress.com/2010/06/09/codigos-javascript-del-teclado-keycodes/" target="_blank"> Guide of keycodes </a></li>
   <li><a href="https://www.w3schools.com/jsref/met_win_setinterval.asp" target="_blank">Ayuda setInterval </a></li>
-  <li><a href="https://css-tricks.com/snippets/html/open-link-in-a-new-window/" target="_blank">Opening lik in a new window</a></li>
+  <li><a href="https://css-tricks.com/snippets/html/open-link-in-a-new-window/" target="_blank">Opening link in a new window</a></li>
+  <li><a href="https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_responsive_navbar_dropdown" target="_blank">Responsive nav menu</a></li>
 
 
 
@@ -61,11 +62,28 @@
 
 <footer>
 <nav>
+<div class="footnav" id="myFootnav">
+<a href="index.html"vclass="active">Inicio</a>
 <a href="game.html">Jugar</a>
 <a href="description.html">Descripción</a>
 <a href="authors.html">Autores</a>
 <a href="development.html">Desarrollo</a>
 <a href="references.html">Referencias</a>
+<a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
+</div>
+<div style="padding-left:16px">
+</div>
+
+<script>
+function myFunction() {
+    var x = document.getElementById("myFootnav");
+    if (x.className === "footnav") {
+        x.className += " responsive";
+    } else {
+        x.className = "footnav";
+    }
+}
+</script>
 </nav>
 </footer>
 
