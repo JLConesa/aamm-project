@@ -153,12 +153,15 @@ var Ship = function(){
           ctx.beginPath();
           ctx.arc(0, 0, this.radius, 0, 2*Math.PI);
           ctx.closePath();
-          ctx.stroke();
-
+          /*UNCOMMENT FOR VIEWING HITBOX*/
+          // ctx.stroke();
+          /***************************/
           ctx.beginPath();
           ctx.arc(this.topX-this.x, this.topY-this.y, this.scndradius, 0, 2*Math.PI);
           ctx.closePath();
-          ctx.stroke();
+          /*UNCOMMENT FOR VIEWING HITBOX*/
+          // ctx.stroke();
+          /***************************/
           ctx.restore();
       }else{
         ctx.save();
@@ -315,7 +318,9 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
         ctx.beginPath();
         ctx.arc(0, 0, this.radius, 0, 2*Math.PI);
         ctx.closePath();
-		    ctx.stroke();
+        /*UNCOMMENT FOR VIEWING HITBOX*/
+        // ctx.stroke();
+        /***************************/
 
         ctx.restore();
     }
@@ -500,7 +505,7 @@ window.onload = function(){
 				key(e, ship, bullets, contexto);
       }
 		}
-		/*SetInterval llama a una funcion cada cierto periodo de tiempo (en milisegundos)*/
+		/*SetInterval calls the refresh function once each 16 ms */
 		setInterval(function(){refresh(ship, asteroids, bullets, contexto, backg, score)}, 16);
 	}
     else{
