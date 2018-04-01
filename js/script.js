@@ -266,26 +266,26 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
       this.sprite.src = "img/mAsteroid.png";
     }
 
-    console.log(this.radius);
+    // console.log(this.radius);
     this.speedX = speedX;
     this.speedY = speedY;
     this.rotationSpeed = rotationSpeed;
     this.direction = 0;
 
     this.move = function(){
-        if(this.x>window.innerWidth+45){ /*cambiar 45 por this.radius*/
-            this.x = -45;
+        if(this.x>window.innerWidth+this.radius){
+            this.x = -this.radius;
         }
-        if(this.x<-45){
-            this.x = window.innerWidth+45;
+        if(this.x<-this.radius){
+            this.x = window.innerWidth+this.radius;
         }else{
             this.x = this.x + this.speedX;
         }
-        if(this.y>window.innerHeight+45){
-            this.y = -45;
+        if(this.y>window.innerHeight+this.radius){
+            this.y = -this.radius;
         }
-        if(this.y<-45){
-            this.y = window.innerHeight+45;
+        if(this.y<-this.radius){
+            this.y = window.innerHeight+this.radius;
         }else{
             this.y = this.y + this.speedY;
         }
@@ -347,12 +347,10 @@ function removeOutOfBoundBullet(bullets){
 }
 
 function gameOver(ctx){
-  /* var canvas = document.getElementById("fondo");
-  var ctx = canvas.getContext("2d");  */
-  ctx.fillStyle =("#FFFFFF");
-  ctx.font = "60px Arial";
-  ctx.fillText("GAME OVER",10,50);
-  /*document.write("<h1>GAME OVER</h1>");*/
+  var gameOverImg = new Image();
+  gameOverImg.src = "img/GameOver.png";
+  ctx.drawImage(gameOverImg, window.innerWidth/2 - gameOverImg.width, window.innerHeight/2 - gameOverImg.height);
+
   endSound.play();
   if(endSound.ended){
     endSound.pause();
@@ -390,7 +388,7 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
     for(i=0; i<asteroid.length; i++){
         asteroid[i].move();
         asteroid[i].draw(contexto);
-        if(ship.hasCollided(asteroid[i])){
+        if(ship.hasCollided(asteroid[i]) && ship.dead == false){
           ship.draw(contexto, true); //(Debug) lo pone en rojo
           ship.death();
         }
@@ -401,8 +399,8 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
           if(asteroid[i].hasCollided(bullets[j])){
               //asteroid[i].destroy();
 			        if(asteroid[i].radius > 30){
-				            asteroid.splice(i,1,new Asteroid(asteroid[i].x + 5,asteroid[i].y,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX,asteroid[i].speedY,asteroid[i].rotationSpeed),
-			                            new Asteroid(asteroid[i].x - 5,asteroid[i].y,asteroid[i].radius/Math.sqrt(2),-asteroid[i].speedX,-asteroid[i].speedY,asteroid[i].rotationSpeed));
+				            asteroid.splice(i,1,new Asteroid(asteroid[i].x+asteroid[i].speedX,asteroid[i].y-asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*3*Math.random(),asteroid[i].speedY*2*Math.random(),asteroid[i].rotationSpeed),
+			                                  new Asteroid(asteroid[i].x-asteroid[i].speedX,asteroid[i].y+asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*2*Math.random(),asteroid[i].speedY*3*Math.random(),asteroid[i].rotationSpeed));
               }else{
 				            asteroid.splice(i,1);
 			        }
@@ -416,10 +414,10 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
     }
 
 
-    if (ship.lives<=0 && ship.exploding === false && ship.dead == false){
+    if (ship.lives<=0 && ship.exploding == false){
         ship.dead = true;
         gameOver(contexto);
-    }else{
+    }else if (ship.dead == false){
       ship.draw(contexto, false);
     }
     if(ship.dead == false){
@@ -432,7 +430,6 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
 
 function spawnAsteroids(asteroids,number, level){
   /*level aumentará la speed*/
-  /*https://stackoverflow.com/questions/6254050/how-to-add-an-object-to-an-array*/
 
     for(i=0; i<number; i++){
         asteroids.push(new Asteroid(Math.random()*window.innerWidth,Math.random()*window.innerHeight,55,Math.random()*2-Math.random()*2,Math.random()*2-Math.random()*2,Math.random()*0.05));
@@ -478,12 +475,14 @@ window.onload = function(){
 
 		/*Observamos si se ha pulsado alguna tecla del teclado*/
 		document.onkeydown = function(e) {
+      if(ship.dead == false){
 				key(e, ship, bullets, contexto);
+      }
 		}
 		/*SetInterval llama a una funcion cada cierto periodo de tiempo (en milisegundos)*/
 		setInterval(function(){refresh(ship, asteroids, bullets, contexto, backg, score)}, 16);
 	}
     else{
-		alert('Navegador Incompatible');
+		alert('Navegador Incompatible con HTML5 Canvas');
     }
 }
