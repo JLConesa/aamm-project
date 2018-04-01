@@ -324,7 +324,7 @@ var Score = function(lifes,puntuation,ctx){
     ctx.fillStyle =("#FFFFFF");
     ctx.font = "40px Arial";
     ctx.textAlign="center";
-    ctx.fillText("Lifes: "+lifes,window.innerWidth/2,50);
+    ctx.fillText("Lives: "+lifes,window.innerWidth/2,50);
 
   }
 }
