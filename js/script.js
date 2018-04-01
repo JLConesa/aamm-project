@@ -1,10 +1,11 @@
 /*
-Proyecto Web Aplicaciones Multimedia Curso 2017/2018
-
-María Alonso Arroyo     100
-José Luis Conesa Pérez  100
-Pablo Lago Álvarez      100346367
-Kenza Marrakchi Chikri  100
+* Proyecto Web Aplicaciones Multimedia Curso 2017/2018
+*
+* María Alonso Arroyo     100346321
+* José Luis Conesa Pérez  100317695
+* Pablo Lago Álvarez      100346367
+* Kenza Marrakchi Chikri  100346379
+*
 */
 
 /*******************************************************************************
@@ -12,8 +13,7 @@ Kenza Marrakchi Chikri  100
 *******************************************************************************/
 var asteroids = [];
 var bullets = [];
-
-
+var level = 0;
 /*******************************************************************************
                                 OBJECT DECLARATION
 *******************************************************************************/
@@ -81,6 +81,7 @@ var Ship = function(){
       this.explosion.src = "img/explosion.png";
       this.explosionXCounter = 0;
       this.explosionYCounter = 0;
+      this.frameCounter = 0;
 
       /*movement*/
       this.direction = 0; /*this var stores where the ship is pointing*/
@@ -90,7 +91,7 @@ var Ship = function(){
     }
 
     this.move = function(){  /*ship accelerates towards its direction*/
-      if(this.exploding === false){
+      if(this.exploding == false && this.dead == false){
         if(this.x>window.innerWidth+this.radius/2){
           this.x = -this.radius/2;
           this.topX = -this.radius/2;
@@ -117,11 +118,11 @@ var Ship = function(){
     }
 
     this.rotate = function(sense,ctx){
-        var sensibility = Math.PI/8;
-        if(sense === "left"){
+        var sensibility = Math.PI/16;
+        if(sense == "left"){
             this.direction = this.direction + sensibility;
         }
-        if(sense === "right"){
+        if(sense == "right"){
             this.direction = this.direction - sensibility;
         }
         this.topX = this.x - 37*Math.sin(this.direction);
@@ -131,7 +132,7 @@ var Ship = function(){
     }
 
   	this.draw = function(ctx, collition){
-      if(this.exploding === false){
+      if(this.exploding == false){
           if(collition){
             ctx.strokeStyle="red";
           }else if(this.inmune){
@@ -153,13 +154,13 @@ var Ship = function(){
           ctx.beginPath();
           ctx.arc(0, 0, this.radius, 0, 2*Math.PI);
           ctx.closePath();
-          /*UNCOMMENT FOR VIEWING HITBOX*/
+          /*UNCOMMENT TO DISPLAY HITBOXES*/
           // ctx.stroke();
           /***************************/
           ctx.beginPath();
           ctx.arc(this.topX-this.x, this.topY-this.y, this.scndradius, 0, 2*Math.PI);
           ctx.closePath();
-          /*UNCOMMENT FOR VIEWING HITBOX*/
+          /*UNCOMMENT TO DISPLAY HITBOXES*/
           // ctx.stroke();
           /***************************/
           ctx.restore();
@@ -168,20 +169,25 @@ var Ship = function(){
         ctx.translate(this.x,this.y);
         ctx.drawImage(this.explosion,this.explosionXCounter*100, this.explosionYCounter*100, 100, 100, -50, -50, 100, 100);
         ctx.restore();
-        this.explosionXCounter = this.explosionXCounter + 1;
-        this.explosionYCounter = this.explosionYCounter + 1;
-        if(this.explosionXCounter === 10 && this.explosionYCounter === 10){
-          this.exploding = false;
-          this.inmune = true;
-          this.explosionXCounter = 0;
-          this.explosionXCounter = 0;
-          if(this.lives >=0 ){
-            startSound.play();
+        if(this.frameCounter < 4){
+          this.frameCounter = this.frameCounter + 1;
+        }else{
+          this.frameCounter = 0;
+          this.explosionXCounter = this.explosionXCounter + 1;
+          this.explosionYCounter = this.explosionYCounter + 1;
+          if(this.explosionXCounter == 10 && this.explosionYCounter == 10){
+            this.exploding = false;
+            this.inmune = true;
+            this.explosionXCounter = 0;
+            this.explosionXCounter = 0;
+            if(this.lives >=0 ){
+              startSound.play();
+            }
+            this.init();
           }
-          this.init();
-        }
-        if(this.explosionXCounter === 10){
-          this.explosionXCounter = 0;
+          if(this.explosionXCounter == 10){
+            this.explosionXCounter = 0;
+          }
         }
       }
   	}
@@ -194,8 +200,8 @@ var Ship = function(){
 
     this.death = function(){
 
-      /*Desaparece la nave, quita una vida o pierdes el juego*/
-      if(this.inmune === false){
+      /*Removes the ship, removes a live or ends the game*/
+      if(this.inmune == false){
         explosion.play();
         this.exploding = true;
         this.inmune = true;
@@ -208,7 +214,7 @@ var Ship = function(){
     }
 
     this.hasCollided = function(asteroid){
-      if(this.exploding === false){
+      if(this.exploding == false){
         dx = Math.abs(asteroid.x - this.x);
         dy = Math.abs(asteroid.y - this.y);
 
@@ -270,7 +276,7 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     this.y = y;
     this.radius = radius;
     this.sprite = new Image();
-    if(this.radius === 55){
+    if(this.radius == 55){
       this.sprite.src = "img/xlAsteroid.png";
     }else if(this.radius < 27.5){
       console.log(this.radius);
@@ -335,12 +341,16 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
 }
 
 /********************************SCORE*****************************************/
-var Score = function(lives,puntuation,ctx){
+var Score = function(lives,points,ctx,lvl){
+  this.points = points;
   this.draw = function(lives){
     ctx.fillStyle =("#FFFFFF");
-    ctx.font = "40px Arial";
+    ctx.font = "40px Courier New";
     ctx.textAlign="center";
-    ctx.fillText("Lives: "+lives,window.innerWidth/2,50);
+    ctx.fillText(this.points,window.innerWidth/2,50);
+    ctx.font = "25px Courier New";
+    ctx.fillText("Lives: "+lives,window.innerWidth-200,45);
+    ctx.fillText("Level: "+level,200,45);
 
   }
 }
@@ -354,12 +364,13 @@ function resizeCanvas(canvas) {
 
 }
 
-function spawnAsteroids(asteroids,number, level){
-  /*level aumentará la speed*/
-
+function spawnAsteroids(asteroids,number,lvl){
+  this.lvl = level;
+  /*level increases the speed*/
     for(i=0; i<number; i++){
-        asteroids.push(new Asteroid(Math.random()*window.innerWidth,Math.random()*window.innerHeight,55,Math.random()*2-Math.random()*2,Math.random()*2-Math.random()*2,Math.random()*0.05));
+        asteroids.push(new Asteroid(Math.random()*window.innerWidth,Math.random()*window.innerHeight,55,Math.random()*2*level-Math.random()*2*level,Math.random()*2*level-Math.random()*2*level,Math.random()*0.05));
     }
+    level = level+1;
 }
 
 
@@ -373,16 +384,18 @@ function removeOutOfBoundBullet(bullets){
   }
 }
 
-function gameOver(ctx){
+function gameOver(ctx, ship){
   var gameOverImg = new Image();
   gameOverImg.src = "img/GameOver.png";
-  ctx.drawImage(gameOverImg, window.innerWidth/2 - gameOverImg.width, window.innerHeight/2 - gameOverImg.height);
+  ctx.save();
+  ctx.translate(window.innerWidth/2, window.innerHeight/2);
+  ctx.drawImage(gameOverImg, 0 - gameOverImg.width/2, 0 - gameOverImg.height/2);
+  ctx.restore();
 
-  endSound.play();
-  if(endSound.ended){
-    endSound.pause();
-    endSound.muted = true;
+  if(ship.dead == false){
+    endSound.play();
   }
+  ship.dead = true;
 }
 
 function muteGame(){
@@ -407,10 +420,10 @@ function muteGame(){
                              REFRESH FUNCTION
 *******************************************************************************/
 function refresh(ship, asteroid, bullets, contexto, backg, score){
-	/*Esta función nos ayuda a refrescar la pantalla del canvas, se realizará cada cierto tiempo*/
-    backg.draw(contexto); /*dibuja el fondo de la pantalla*/
+	/*this fucntion is in charge of redrawing the whole page to achive the game animation*/
+    backg.draw(contexto); /*re-draw the page background*/
 
-    if(startSound.ended){ /*end he inmune period*/
+    if(startSound.ended){ /*end the inmune period*/
       ship.inmune = false;
     }
 
@@ -418,7 +431,7 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
         asteroid[i].move();
         asteroid[i].draw(contexto);
         if(ship.hasCollided(asteroid[i]) && ship.dead == false){
-          ship.draw(contexto, true); //(Debug) lo pone en rojo
+          ship.draw(contexto, true); //(Debug) red
           ship.death();
         }
 
@@ -427,31 +440,34 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
           bullets[j].draw(contexto);
           if(asteroid[i].hasCollided(bullets[j])){
 			        if(asteroid[i].radius > 30){
+                    score.points = 50 * 10 * asteroid[i].radius % 10;
 				            asteroid.splice(i,1,new Asteroid(asteroid[i].x+asteroid[i].speedX,asteroid[i].y-asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*3*Math.random(),asteroid[i].speedY*2*Math.random(),asteroid[i].rotationSpeed),
 			                                  new Asteroid(asteroid[i].x-asteroid[i].speedX,asteroid[i].y+asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*2*Math.random(),asteroid[i].speedY*3*Math.random(),asteroid[i].rotationSpeed));
               }else{
 				            asteroid.splice(i,1);
 			        }
 			        explosion.play();
-              bullets.splice(j,1); /*Elimina la bullet del array*/
+              bullets.splice(j,1); /*removes a bullet from the array*/
             }
         }
     }
     if(asteroid.length<=0){
-      spawnAsteroids(asteroid,3,2);
+      spawnAsteroids(asteroid,3,score.level);
     }
 
 
     if (ship.lives<=0 && ship.exploding == false){
-        ship.dead = true;
-        gameOver(contexto);
+        gameOver(contexto, ship);
     }else if (ship.dead == false){
       ship.draw(contexto, false);
     }
     if(ship.dead == false){
       score.draw(ship.lives);
     }
-    console.log('lives: '+ship.lives);
+
+    score.points = score.points+1;
+    // console.log('lives: '+ship.lives);
+    console.log('global level: '+level)
     //console.log(asteroid.length);
     // console.log("inmune? "+ship.inmune)
 }
@@ -478,7 +494,6 @@ function key (e,ship, bullets,contexto){
 		}
 }
 
-
 /*******************************************************************************
                                  MAIN
 *******************************************************************************/
@@ -494,9 +509,9 @@ window.onload = function(){
 		var contexto = elemCanvas.getContext('2d');
 		var ship = new Ship();
 		var backg = new Backg();
-    var score = new Score(ship.lives,0,contexto);
+    var score = new Score(ship.lives,0,contexto,level);
 		resizeCanvas(elemCanvas);
-		spawnAsteroids(asteroids,3,2);
+		// spawnAsteroids(asteroids,3,1);
     startSound.play();
 
 		/*Listens if a key has been pressed*/
