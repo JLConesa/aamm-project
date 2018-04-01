@@ -1,3 +1,6 @@
+@import url("https://www.w3schools.com/w3css/4/w3.css");
+@import url(responsiveMenu.css);
+
 html, body{
     font-family: "Lucida Console", Monaco, monospace;
     color: white;
@@ -100,7 +103,7 @@ a:hover{
 footer{
     z-index: 1;
     position: fixed;
-    bottom: 3%;
+    bottom: 0;
     left: 0;
 	  text-align: center;
     display: block;

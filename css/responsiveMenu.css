@@ -1,13 +1,13 @@
 /* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_responsive_navbar_dropdown */
 .footnav {
   overflow: hidden;
-  background-color: #0D0D18;
+  background-color: rgba(0,0,0,0.5);
 }
 
 .footnav a {
   float: left;
   display: block;
-  color: #f2f2f2;
+  color: white;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
