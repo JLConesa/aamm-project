@@ -25,6 +25,7 @@ html, body{
 
 }
 
+/*Header Image classes visible/invisible*/
 .ab_center
 {
     height:100%;
@@ -37,7 +38,53 @@ html, body{
     bottom:0;
     max-width: 80%;
     max-height: 50%;
-    /* border: solid red 2px; /*debug stuff*/ */
+}
+.ab_center_inv
+{
+  height:100%;
+  width:100%;
+  position: absolute;
+  margin:auto;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  max-width: 80%;
+  max-height: 50%;
+  visibility: hidden;
+}
+
+/*video classes visible/invisible*/
+.video_invisible
+{
+  height:100%;
+  width:100%;
+  position: absolute;
+  align-self: center;
+  margin:auto;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  max-width: 90%;
+  max-height: 90%;
+  visibility: hidden;
+}
+
+.video_visible
+{
+  height:100%;
+  width:100%;
+  position: absolute;
+  align-self: center;
+  margin:auto;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  max-width: 90%;
+  max-height: 90%;
+  visibility: visible;
 }
 
 a{
