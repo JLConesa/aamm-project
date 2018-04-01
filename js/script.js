@@ -1,32 +1,40 @@
 /*
 Proyecto Web Aplicaciones Multimedia Curso 2017/2018
 
-María Alonso Arroyo
-José Luis Conesa Pérez
-Pablo Lago Álvarez
-Kenza Marrakchi Chikri
+María Alonso Arroyo     100
+José Luis Conesa Pérez  100
+Pablo Lago Álvarez      100346367
+Kenza Marrakchi Chikri  100
 */
 
-
+/*******************************************************************************
+                                 GLOBAL VARIABLES
+*******************************************************************************/
 var asteroids = [];
 var bullets = [];
 
 
+/*******************************************************************************
+                                OBJECT DECLARATION
+*******************************************************************************/
+
+/*********************************BACKGROUND***********************************/
 var Backg = function(){
     this.draw = function(ctx){
         ctx.fillStyle="#0E0E18";
-        ctx.rect(0,0,4000,3000); /*Probablemente sea muy grande*/
+        ctx.rect(0,0,4000,3000); /*Bigger than most screens*/
         ctx.fill();
     }
 
 }
 
+/********************************SPACESHIP*************************************/
 var Ship = function(){
 
     /*init. values*/
-    this.radius = 24;/*radius obtained from sprite*/
-    this.x = window.innerWidth/2;  /*centered initial position*/
-  	this.y = window.innerHeight/2; /*centered initial position*/
+    this.radius = 24;               /*radius obtained from sprite*/
+    this.x = window.innerWidth/2;   /*centered initial position*/
+  	this.y = window.innerHeight/2;  /*centered initial position*/
 
     /*hitbox, from the sprite*/
     this.scndradius = 13;
@@ -50,14 +58,14 @@ var Ship = function(){
     this.explosionYCounter = 0;
 
     /*movement*/
-    this.direction = 0; /*this var stores where the ship is pointing*/
+    this.direction = 0;   /*this var stores where the ship is pointing*/
     this.speedX = 0;
     this.speedY = -10;
-    this.speed = 15; /*ship speed*/
+    this.speed = 15;      /*ship speed*/
 
     this.init = function(){
       /*init. values*/
-      this.radius = 24;/*radius obtained from sprite*/
+      this.radius = 24;              /*radius obtained from sprite*/
       this.x = window.innerWidth/2;  /*centered initial position*/
     	this.y = window.innerHeight/2; /*centered initial position*/
 
@@ -81,7 +89,7 @@ var Ship = function(){
       this.speed = 15; /*ship speed*/
     }
 
-    this.move = function(){  /*acelera en la direction de la nave*/
+    this.move = function(){  /*ship accelerates towards its direction*/
       if(this.exploding === false){
         if(this.x>window.innerWidth+this.radius/2){
           this.x = -this.radius/2;
@@ -223,6 +231,7 @@ var Ship = function(){
     }
 }
 
+/********************************BULLET****************************************/
 var Bullet = function(x,y, speed, angle, longitude){
     this.x = x;
     this.y = y;
@@ -252,6 +261,7 @@ var Bullet = function(x,y, speed, angle, longitude){
     }
 }
 
+/******************************ASTEROID****************************************/
 var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     this.x = x;
     this.y = y;
@@ -310,7 +320,6 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
         ctx.restore();
     }
 
-
     this.hasCollided = function(bullet){
         if(Math.abs(bullet.x-this.x)<this.radius && Math.abs(bullet.y-this.y)<this.radius){
           return true;
@@ -320,6 +329,7 @@ var Asteroid = function(x,y, radius, speedX, speedY, rotationSpeed){
     }
 }
 
+/********************************SCORE*****************************************/
 var Score = function(lives,puntuation,ctx){
   this.draw = function(lives){
     ctx.fillStyle =("#FFFFFF");
@@ -330,11 +340,23 @@ var Score = function(lives,puntuation,ctx){
   }
 }
 
+/*******************************************************************************
+                             OTHER FUNCTIONS
+*******************************************************************************/
 function resizeCanvas(canvas) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
 }
+
+function spawnAsteroids(asteroids,number, level){
+  /*level aumentará la speed*/
+
+    for(i=0; i<number; i++){
+        asteroids.push(new Asteroid(Math.random()*window.innerWidth,Math.random()*window.innerHeight,55,Math.random()*2-Math.random()*2,Math.random()*2-Math.random()*2,Math.random()*0.05));
+    }
+}
+
 
 function removeOutOfBoundBullet(bullets){
   if(bullets.length > 0){
@@ -359,7 +381,6 @@ function gameOver(ctx){
 }
 
 function muteGame(){
-
   if(!pew.muted){
   pew.muted = true;
   startSound.muted = true;
@@ -377,6 +398,9 @@ function muteGame(){
   }
 }
 
+/*******************************************************************************
+                             REFRESH FUNCTION
+*******************************************************************************/
 function refresh(ship, asteroid, bullets, contexto, backg, score){
 	/*Esta función nos ayuda a refrescar la pantalla del canvas, se realizará cada cierto tiempo*/
     backg.draw(contexto); /*dibuja el fondo de la pantalla*/
@@ -397,7 +421,6 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
           bullets[j].move();
           bullets[j].draw(contexto);
           if(asteroid[i].hasCollided(bullets[j])){
-              //asteroid[i].destroy();
 			        if(asteroid[i].radius > 30){
 				            asteroid.splice(i,1,new Asteroid(asteroid[i].x+asteroid[i].speedX,asteroid[i].y-asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*3*Math.random(),asteroid[i].speedY*2*Math.random(),asteroid[i].rotationSpeed),
 			                                  new Asteroid(asteroid[i].x-asteroid[i].speedX,asteroid[i].y+asteroid[i].speedY,asteroid[i].radius/Math.sqrt(2),asteroid[i].speedX*2*Math.random(),asteroid[i].speedY*3*Math.random(),asteroid[i].rotationSpeed));
@@ -428,14 +451,10 @@ function refresh(ship, asteroid, bullets, contexto, backg, score){
     // console.log("inmune? "+ship.inmune)
 }
 
-function spawnAsteroids(asteroids,number, level){
-  /*level aumentará la speed*/
 
-    for(i=0; i<number; i++){
-        asteroids.push(new Asteroid(Math.random()*window.innerWidth,Math.random()*window.innerHeight,55,Math.random()*2-Math.random()*2,Math.random()*2-Math.random()*2,Math.random()*0.05));
-    }
-}
-
+/*******************************************************************************
+                                 KEY DETECTION
+*******************************************************************************/
 function key (e,ship, bullets,contexto){
 		tecla  = e.which;
 		switch (tecla){
@@ -454,9 +473,11 @@ function key (e,ship, bullets,contexto){
 		}
 }
 
+
+/*******************************************************************************
+                                 MAIN
+*******************************************************************************/
 window.onload = function(){
-
-
 	var startSound = document.getElementById("startSound");
 	var endSound = document.getElementById("endSound");
 	var pew = document.getElementById("pew");
@@ -473,7 +494,7 @@ window.onload = function(){
 		spawnAsteroids(asteroids,3,2);
     startSound.play();
 
-		/*Observamos si se ha pulsado alguna tecla del teclado*/
+		/*Listens if a key has been pressed*/
 		document.onkeydown = function(e) {
       if(ship.dead == false){
 				key(e, ship, bullets, contexto);
