@@ -1,35 +1,53 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Asteroids</title>
-<!-- ************************FAVICONS************************ -->
-<!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
-<!--[if IE]><link rel="shortcut icon" href="res/favicon.ico"><![endif]-->
+  <title>Asteroids</title>
+  <!-- ************************FAVICONS************************ -->
+  <!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
+  <!--[if IE]><link rel="shortcut icon" href="res/favicon.ico"><![endif]-->
 
-<!-- Touch Icons - iOS and Android 2.1+ 180x180 pixels in size. -->
-<link rel="apple-touch-icon-precomposed" href="res/apple-touch-icon-precomposed.png">
+  <!-- Touch Icons - iOS and Android 2.1+ 180x180 pixels in size. -->
+  <link rel="apple-touch-icon-precomposed" href="res/apple-touch-icon-precomposed.png">
 
-<!-- Firefox, Chrome, Safari, IE 11+ and Opera. 196x196 pixels in size. -->
-<link rel="icon" href="res/favicon.png">
-<!-- ******************************************************** -->
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" type="text/css" href="css/indexStyle.css"></link>
+  <!-- Firefox, Chrome, Safari, IE 11+ and Opera. 196x196 pixels in size. -->
+  <link rel="icon" href="res/favicon.png">
+  <!-- ******************************************************** -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css" href="css/indexStyle.css"></link>
 
-<link rel="stylesheet" type="text/css" href="css/stars.css"></link>
-<!--https://codepen.io/Glucio/pen/BoLWPo-->
+  <link rel="stylesheet" type="text/css" href="css/stars.css"></link>
+  <!--https://codepen.io/Glucio/pen/BoLWPo-->
+
+  <!-- visibility switching code img->vid -->
+  <script>
+
+  function switch_video() {
+    document.getElementById("header_div").classList.remove("ab_center");
+    document.getElementById("header_div").classList.add("ab_center_inv");
+    var video = document.getElementById("video");
+
+    video.classList.remove("video_invisible");
+    video.classList.add("video_visible");
+    video.play();
+  }
+
+  </script>
 </head>
 
 <body>
 <div id='stars'></div>
 <div id='stars2'></div>
 <div id='stars3'></div>
-<div class="ab_center">
 
-<img src="img/AsteroidsTitle.png" alt="" height="312" width="1280" class="titulo" align="middle"></img>
-    <!-- <h1>ASTEROIDS</h1> -->
-    <!-- <h1>JUEGO</h1> -->
+<!-- The header image becomes invisible once you click it, while the trailer apears-->
+<div class="ab_center" id="header_div">
+  <img src="img/AsteroidsTitle.png" alt="" height="312" width="1280" class="titulo" align="middle" onclick="switch_video()"></img>
+</div>
 
+<!-- You will be redirected to the game's page once you click on the trailer or it ends-->
+<div class="video_invisible">
+  <video class="video_invisible" src="media/Asteroids- Outpost Early Access Trailer.mp4" type="video/mp4" align="middle" id="video" onclick="location.href='game.html';" onended="location.href='game.html';"></video>
 </div>
 
 <footer>
