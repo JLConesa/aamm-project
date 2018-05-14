@@ -10,13 +10,13 @@ El objetivo del juego es destruir los asteroides. Al iniciarse aparecen varios a
 
 ## Autores
 ### María Alonso
-Detección de pulsaciones de teclas y ratón.
+Diseño del movimiento de los meteoritos durante el juego. Diseño de la desaparición y creacion de meteoritos y nave central. Redacción de la descripción, autores y referencias del menú del juego.
 ### José Luis Conesa
-Detección de colisiones.
+Diseño del la imágen (mediante sprites) de los meteoritos y nave. Diseño e implementación del video presentación del juego. Implementación del video "teaser" en la pantalla de inicio. Aportación a la mecánica de juego y animación.
 ### Pablo Lago
-Diseño de la página y el logo de inicio. Implementación de Material Design Lite. Composición de los sonidos y música utilizados en el juego. Botón de muteo. Aportación a la mecánica y la animación de juego.
+Diseño de la página y logo de inicio. Implementación de Material Design Lite. Composición de los sonidos y música utilizados en el juego. Botón de muteo. Aportación a la mecánica de juego y animación. Diseño del marcador con vidas y niveles. Hojas de estilo de las páginas (pageStyle.css) y su (no perfecta) adaptación a móviles (Responsive Web Design).
 ### Kenza Marrakchi
-Detección de pulsaciones de teclas y ratón.
+Diseño del movimiento de los meteoritos durante el juego. Diseño de la desaparición y creacion de meteoritos y nave central. Redacción de la descripción, autores y referencias del menú del juego.
 
 ## Desarrollo
 Ver commits.
